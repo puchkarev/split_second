@@ -31,6 +31,9 @@ constexpr float kPlayerMaxX = 0.75f;
 constexpr float kPlayerMinY = -0.9f;
 constexpr float kPlayerMaxY = 0.3f;
 
+constexpr float kStepX = 0.03;
+constexpr float kStepY = 0.03;
+
 std::vector<GLfloat> PlayerModel(float x, float y) {
     return {
             x - 0.1f, y - 0.05f, // Bottom Left
@@ -42,9 +45,9 @@ std::vector<GLfloat> PlayerModel(float x, float y) {
 
 }  // namespace
 
-Player::Player(float x, float y) {
-    x_ = x;
-    y_ = y;
+Player::Player() {
+    x_ = 0.0f;
+    y_ = 0.0f;
     if (g_player_program_ == 0) {
         g_player_program_ = createProgram(vertexShaderSource, fragmentShaderSource);
     }
@@ -56,17 +59,23 @@ Player::~Player() {
     }
 }
 
+void Player::click(float x, float y) {
+    if (x < x_) {
+        move(-kStepX, 0.0);
+    } else if (x > x_) {
+        move(+kStepX, 0.0);
+    }
+
+    if (y < y_) {
+        move(0.0, -kStepY);
+    } else if (y > y_) {
+        move(0.0, +kStepY);
+    }
+}
+
 void Player::move(float dx, float dy) {
     x_ = fmin(fmax(x_ + dx, kPlayerMinX), kPlayerMaxX);
     y_ = fmin(fmax(y_ + dy, kPlayerMinY), kPlayerMaxY);
-}
-
-float Player::y() const {
-    return y_;
-}
-
-float Player::x() const {
-    return x_;
 }
 
 void Player::render() const {

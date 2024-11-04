@@ -10,12 +10,10 @@
 // Represents the player model.
 class Player {
 public:
-    Player(float x, float y);
+    Player();
     ~Player();
 
-    [[nodiscard]] float x() const;
-    [[nodiscard]] float y() const;
-
+    void click(float x, float y);
     void move(float dx, float dy);
     void render() const;
 
