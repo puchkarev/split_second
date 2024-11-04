@@ -64,3 +64,18 @@ GLuint createProgram(const char *vertexShaderSrc, const char *fragmentShaderSrc)
 
     return program;
 }
+
+void renderTriangleStripUsingProgram(GLuint program, const std::vector<GLfloat>& vertices) {
+    if (program == 0) return;
+
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    GLuint positionHandle = glGetAttribLocation(program, "aPosition");
+    glEnableVertexAttribArray(positionHandle);
+
+    glVertexAttribPointer(positionHandle, 2, GL_FLOAT, GL_FALSE, 0, &vertices[0]);
+
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, static_cast<int>(vertices.size()) / 2);
+
+    glDisableVertexAttribArray(positionHandle);
+}

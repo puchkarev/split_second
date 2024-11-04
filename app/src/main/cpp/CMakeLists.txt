@@ -30,6 +30,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         GameState.cpp
         Player.cpp
         gl_assist.cpp
+        project_time.cpp
 )
 
 # Locates the relevant libraries

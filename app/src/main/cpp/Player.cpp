@@ -2,9 +2,10 @@
 // Created by ittec on 11/4/2024.
 //
 
-#include "Player.h"
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
+
+#include "Player.h"
 #include "log.h"
 #include "gl_assist.h"
 
@@ -31,8 +32,10 @@ constexpr float kPlayerMaxX = 0.75f;
 constexpr float kPlayerMinY = -0.9f;
 constexpr float kPlayerMaxY = 0.3f;
 
-constexpr float kStepX = 0.03;
-constexpr float kStepY = 0.03;
+constexpr float kStepX = 0.02;
+constexpr float kStepY = 0.02;
+
+constexpr float kMaxSpeed = 100.0;
 
 std::vector<GLfloat> PlayerModel(float x, float y) {
     return {
@@ -48,6 +51,8 @@ std::vector<GLfloat> PlayerModel(float x, float y) {
 Player::Player() {
     x_ = 0.0f;
     y_ = 0.0f;
+    speed_ = 0.0f;
+
     if (g_player_program_ == 0) {
         g_player_program_ = createProgram(vertexShaderSource, fragmentShaderSource);
     }
@@ -55,7 +60,7 @@ Player::Player() {
 
 Player::~Player() {
     if (g_player_program_ != 0) {
-        glDeleteProgram(g_player_program_);
+        // glDeleteProgram(g_player_program_);
     }
 }
 
@@ -78,18 +83,15 @@ void Player::move(float dx, float dy) {
     y_ = fmin(fmax(y_ + dy, kPlayerMinY), kPlayerMaxY);
 }
 
+void Player::update_speed() {
+    const float f_y = (y_ - kPlayerMinY) / (kPlayerMaxY - kPlayerMinY);
+    speed_ = f_y * kMaxSpeed;
+}
+
+void Player::update(float /*dt*/) {
+    update_speed();
+}
+
 void Player::render() const {
-    if (g_player_program_ == 0) return;
-
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    GLuint positionHandle = glGetAttribLocation(g_player_program_, "aPosition");
-    glEnableVertexAttribArray(positionHandle);
-
-    const std::vector<GLfloat> v = PlayerModel(x_, y_);
-    glVertexAttribPointer(positionHandle, 2, GL_FLOAT, GL_FALSE, 0, &v[0]);
-
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, static_cast<int>(v.size()) / 2);
-
-    glDisableVertexAttribArray(positionHandle);
+    renderTriangleStripUsingProgram(g_player_program_, PlayerModel(x_, y_));
 }

@@ -15,11 +15,15 @@ public:
 
     void click(float x, float y);
     void move(float dx, float dy);
+    void update(float dt);
     void render() const;
 
 private:
+    void update_speed();
+
     float x_;
     float y_;
+    float speed_;
 };
 
 #endif //SPLIT_SECOND_PLAYER_H

@@ -11,9 +11,11 @@ class GameState {
 public:
     GameState();
     void click(float x, float y);
-    void render() const;
+    void update(float dt);
+    void render();
 private:
     Player player_;
+    float last_update_;
 };
 
 #endif //SPLIT_SECOND_GAMESTATE_H
