@@ -26,7 +26,11 @@ project("split_second")
 # used in the AndroidManifest.xml file.
 add_library(${CMAKE_PROJECT_NAME} SHARED
         # List C/C++ source files with relative paths to this CMakeLists.txt.
-        native-lib.cpp)
+        native-lib.cpp
+        GameState.cpp
+        Player.cpp
+        gl_assist.cpp
+)
 
 # Locates the relevant libraries
 find_library(gles-lib GLESv2) # Add OpenGL ES 2.0

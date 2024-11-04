@@ -2,11 +2,8 @@ package com.example.split_second
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-// import com.example.split_second.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-
-    // private lateinit var binding: ActivityMainBinding
 
     private lateinit var glView: GameGLSurfaceView
 
@@ -16,21 +13,7 @@ class MainActivity : AppCompatActivity() {
         // Initialize the GLSurfaceView
         glView = GameGLSurfaceView(this)
         setContentView(glView)
-
-        /*
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        // Example of a call to a native method
-        binding.sampleText.text = stringFromJNI()
-         */
     }
-
-    /**
-     * A native method that is implemented by the 'split_second' native library,
-     * which is packaged with this application.
-     */
-    external fun stringFromJNI(): String
 
     companion object {
         // Used to load the 'split_second' library on application startup.
@@ -39,9 +22,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         @JvmStatic
-        external fun initOpenGL()
+        external fun initGame()
 
         @JvmStatic
         external fun render()
+
+        @JvmStatic
+        external fun touchEvent(width: Int, height: Int, eventX: Float, eventY: Float)
     }
 }

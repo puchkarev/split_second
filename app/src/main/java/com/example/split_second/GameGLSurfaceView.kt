@@ -20,12 +20,10 @@ class GameGLSurfaceView(context: Context) : GLSurfaceView(context) {
 
     private class GameRenderer : Renderer {
         override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
-            // Call native function to initialize OpenGL
-            MainActivity.initOpenGL()
+            MainActivity.initGame()
         }
 
         override fun onDrawFrame(gl: GL10) {
-            // Call native function to render the frame
             MainActivity.render()
         }
 
@@ -37,20 +35,14 @@ class GameGLSurfaceView(context: Context) : GLSurfaceView(context) {
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN || event.action == MotionEvent.ACTION_MOVE) {
-            val x = event.x
-            val y = event.y
-            // TODO: Pass this input to native code if needed
+            MainActivity.touchEvent(width, height, event.x, event.y)
         }
-
-        // Call performClick() to handle accessibility features
         performClick()
-
         return true
     }
 
     override fun performClick(): Boolean {
         super.performClick()
-        // You can add any custom click behavior here if needed
         return true
     }
 }
