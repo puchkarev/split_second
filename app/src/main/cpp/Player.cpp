@@ -11,20 +11,6 @@
 
 namespace {
 
-const char *vertexShaderSource = R"(
-    attribute vec4 aPosition;
-    void main() {
-        gl_Position = aPosition;
-    }
-)";
-
-const char *fragmentShaderSource = R"(
-    precision mediump float;
-    void main() {
-        gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0); // Green color
-    }
-)";
-
 GLuint g_player_program_ = 0;
 
 constexpr float kPlayerMinX = -0.75f;
@@ -54,7 +40,8 @@ Player::Player() {
     speed_ = 0.0f;
 
     if (g_player_program_ == 0) {
-        g_player_program_ = createProgram(vertexShaderSource, fragmentShaderSource);
+        g_player_program_ = createProgram(shaders::getVertexShaderSource(),
+                                          shaders::getFragmentShaderSource());
     }
 }
 

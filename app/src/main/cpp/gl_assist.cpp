@@ -9,6 +9,35 @@
 #include "gl_assist.h"
 #include "log.h"
 
+namespace shaders {
+namespace {
+
+const char *vertexShaderSource = R"(
+    attribute vec4 aPosition;
+    void main() {
+        gl_Position = aPosition;
+    }
+)";
+
+const char *fragmentShaderSource = R"(
+    precision mediump float;
+    void main() {
+        gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0); // Green color
+    }
+)";
+
+}  // namespace
+
+const char *getVertexShaderSource() {
+    return vertexShaderSource;
+};
+
+const char *getFragmentShaderSource() {
+    return fragmentShaderSource;
+}
+
+}  // shaders
+
 GLuint loadShader(GLenum type, const char *shaderSrc) {
     GLuint shader = glCreateShader(type);
     glShaderSource(shader, 1, &shaderSrc, nullptr);

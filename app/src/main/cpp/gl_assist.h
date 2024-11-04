@@ -9,6 +9,13 @@
 #include <GLES2/gl2.h>
 #include <vector>
 
+namespace shaders {
+
+const char* getVertexShaderSource();
+const char* getFragmentShaderSource();
+
+}  // shaders
+
 GLuint loadShader(GLenum type, const char *shaderSrc);
 
 GLuint createProgram(const char *vertexShaderSrc, const char *fragmentShaderSrc);
