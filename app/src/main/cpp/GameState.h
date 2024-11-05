@@ -6,6 +6,7 @@
 #define SPLIT_SECOND_GAMESTATE_H
 
 #include "Player.h"
+#include "renderer.h"
 
 class GameState {
 public:
@@ -14,6 +15,7 @@ public:
     void update(float dt);
     void render();
 private:
+    renderer renderer_;
     Player player_;
     float last_update_;
 };

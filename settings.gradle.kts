@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "split_second"
 include(":app")
+include(":third_party:stb")

@@ -1,17 +1,14 @@
 //
 // Created by ittec on 11/4/2024.
 //
-
-#include <GLES2/gl2.h>
-#include <EGL/egl.h>
-
 #include "Player.h"
+
 #include "log.h"
+#include "model.h"
 #include "gl_assist.h"
+#include "renderer.h"
 
 namespace {
-
-GLuint g_player_program_ = 0;
 
 constexpr float kPlayerMinX = -0.75f;
 constexpr float kPlayerMaxX = 0.75f;
@@ -23,12 +20,41 @@ constexpr float kStepY = 0.02;
 
 constexpr float kMaxSpeed = 100.0;
 
-std::vector<GLfloat> PlayerModel(float x, float y) {
+Model PlayerModel(float x, float y) {
     return {
-            x - 0.1f, y - 0.05f, // Bottom Left
-            x + 0.1f, y - 0.05f, // Bottom Right
-            x - 0.1f, y + 0.05f, // Top Left
-            x + 0.1f, y + 0.05f, // Top Right
+        .vertices = {
+            // First triangle
+            x - 0.1f, y - 0.05f, 0.0f,  // Bottom left
+            x + 0.1f, y - 0.05f, 0.0f,  // Bottom right
+            x + 0.1f,  y + 0.05f, 0.0f,  // Top right
+
+            // Second triangle
+            x + 0.1f,  y + 0.05f, 0.0f,  // Top right
+            x + -0.1f,  y + 0.05f, 0.0f,  // Top left
+            x + -0.1f, y - 0.05f, 0.0f   // Bottom left
+        },
+        .normals = {
+            // First triangle
+            0.0f, 0.0f, 1.0f,  // Bottom left
+            0.0f, 0.0f, 1.0f,  // Bottom right
+            0.0f, 0.0f, 1.0f,  // Top right
+
+            // Second triangle
+            0.0f, 0.0f, 1.0f,  // Top right
+            0.0f, 0.0f, 1.0f,  // Top left
+            0.0f, 0.0f, 1.0f   // Bottom left
+        },
+        .texcoords = {
+            // First triangle
+            0.0f, 1.0f,  // Bottom left (green)
+            0.0f, 1.0f,  // Bottom right (green)
+            0.0f, 1.0f,  // Top right (green)
+
+            // Second triangle
+            0.0f, 1.0f,  // Top right (green)
+            0.0f, 1.0f,  // Top left (green)
+            0.0f, 1.0f   // Bottom left (green)
+        },
     };
 }
 
@@ -38,17 +64,6 @@ Player::Player() {
     x_ = 0.0f;
     y_ = 0.0f;
     speed_ = 0.0f;
-
-    if (g_player_program_ == 0) {
-        g_player_program_ = createProgram(shaders::getVertexShaderSource(),
-                                          shaders::getFragmentShaderSource());
-    }
-}
-
-Player::~Player() {
-    if (g_player_program_ != 0) {
-        // glDeleteProgram(g_player_program_);
-    }
 }
 
 void Player::click(float x, float y) {
@@ -79,6 +94,6 @@ void Player::update(float /*dt*/) {
     update_speed();
 }
 
-void Player::render() const {
-    renderTriangleStripUsingProgram(g_player_program_, PlayerModel(x_, y_));
+void Player::render(const renderer& r) const {
+    r.render(PlayerModel(x_, y_), 0);
 }

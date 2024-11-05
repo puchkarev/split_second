@@ -7,16 +7,17 @@
 
 #include <vector>
 
+#include "renderer.h"
+
 // Represents the player model.
 class Player {
 public:
     Player();
-    ~Player();
 
     void click(float x, float y);
     void move(float dx, float dy);
     void update(float dt);
-    void render() const;
+    void render(const renderer& r) const;
 
 private:
     void update_speed();

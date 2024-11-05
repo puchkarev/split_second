@@ -9,6 +9,8 @@
 #include <GLES2/gl2.h>
 #include <vector>
 
+#include "model.h"
+
 namespace shaders {
 
 const char* getVertexShaderSource();
@@ -18,8 +20,10 @@ const char* getFragmentShaderSource();
 
 GLuint loadShader(GLenum type, const char *shaderSrc);
 
+GLuint loadTexture(const char *filePath);
+
 GLuint createProgram(const char *vertexShaderSrc, const char *fragmentShaderSrc);
 
-void renderTriangleStripUsingProgram(GLuint program, const std::vector<GLfloat>& vertices);
+void renderModelUsingProgram(GLuint program, const Model& model, GLuint texture);
 
 #endif //SPLIT_SECOND_GL_ASSIST_H
