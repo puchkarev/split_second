@@ -12,7 +12,7 @@ public:
     renderer();
     ~renderer();
 
-    int load_texture(const char *filePath) const;
+    static int load_texture(const char *filePath);
     void render(const Model& model, int texture) const;
 
 private:

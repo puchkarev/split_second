@@ -14,10 +14,13 @@ public:
     void click(float x, float y);
     void update(float dt);
     void render();
+
 private:
     renderer renderer_;
     Player player_;
     float last_update_;
+    float y_;
+    float x_;
 };
 
 #endif //SPLIT_SECOND_GAMESTATE_H

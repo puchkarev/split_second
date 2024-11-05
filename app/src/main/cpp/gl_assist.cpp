@@ -46,7 +46,7 @@ const char *fragmentShaderSource = R"(
 
 const char *getVertexShaderSource() {
     return vertexShaderSource;
-};
+}
 
 const char *getFragmentShaderSource() {
     return fragmentShaderSource;
@@ -123,7 +123,8 @@ GLuint loadTexture(const char *filePath) {
     glBindTexture(GL_TEXTURE_2D, texture);
 
     GLenum format = (channels == 3) ? GL_RGB : GL_RGBA;
-    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(format),
+                 width, height, 0, format, GL_UNSIGNED_BYTE, data);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 

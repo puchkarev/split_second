@@ -21,7 +21,7 @@ renderer::~renderer() {
     }
 }
 
-int renderer::load_texture(const char* filePath) const {
+int renderer::load_texture(const char* filePath) {
     return static_cast<int>(loadTexture(filePath));
 }
 

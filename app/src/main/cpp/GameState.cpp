@@ -15,13 +15,13 @@ namespace {
 Model BackgroundModel(float x, float y) {
     return {
         .vertices {
-            x - 1.0f, y - 1.0f, 0.0f,  // Bottom left
-            x + 1.0f, y - 1.0f, 0.0f,  // Bottom right
-            x + 1.0f, y + 1.0f, 0.0f,  // Top right
+            x - 1.0f, y - 2.0f, 0.0f,  // Bottom left
+            x + 1.0f, y - 2.0f, 0.0f,  // Bottom right
+            x + 1.0f, y + 2.0f, 0.0f,  // Top right
 
-            x + 1.0f, y + 1.0f, 0.0f,  // Top right
-            x - 1.0f, y + 1.0f, 0.0f,   // Top left
-            x - 1.0f, y - 1.0f, 0.0f,  // Bottom left
+            x + 1.0f, y + 2.0f, 0.0f,  // Top right
+            x - 1.0f, y + 2.0f, 0.0f,   // Top left
+            x - 1.0f, y - 2.0f, 0.0f,  // Bottom left
         },
         .normals = {
             // First triangle
@@ -48,9 +48,8 @@ Model BackgroundModel(float x, float y) {
 
 }  // namespace
 
-GameState::GameState() : renderer_(), player_() {
+GameState::GameState() : renderer_(), player_(), y_(0.0f), x_(0.0f) {
     LOG_INFO("Starting Game");
-    // glClearColor(0.0f, 0.1f, 0.0f, 1.0f);
     last_update_ = getCurrentTimeSeconds();
 }
 
@@ -68,7 +67,6 @@ void GameState::render() {
     update(dt);
     last_update_ = now;
 
-
-    renderer_.render(BackgroundModel(0.0f, 0.0f), 0);
+    renderer_.render(BackgroundModel(x_, y_), 0);
     player_.render(renderer_);
 }
