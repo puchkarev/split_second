@@ -12,7 +12,12 @@ public:
     renderer();
     ~renderer();
 
-    static int load_texture(const char *filePath);
+    int load_texture(const char *filePath) const;
+    void configure_camera(float cam_x, float cam_y, float cam_z,
+                          float fov_deg, float near_plane, float far_plane,
+                          float aspect_ratio) const;
+
+    void start_new_render() const;
     void render(const Model& model, int texture) const;
 
 private:

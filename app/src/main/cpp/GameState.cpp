@@ -50,6 +50,9 @@ Model BackgroundModel(float x, float y) {
 
 GameState::GameState() : renderer_(), player_(), y_(0.0f), x_(0.0f) {
     LOG_INFO("Starting Game");
+    renderer_.configure_camera(0.0, 0.0, -20.0f,
+                               45.0f, 0.1f, 30.0f,
+                               0.5f);
     last_update_ = getCurrentTimeSeconds();
 }
 
@@ -67,6 +70,7 @@ void GameState::render() {
     update(dt);
     last_update_ = now;
 
+    renderer_.start_new_render();
     renderer_.render(BackgroundModel(x_, y_), 0);
     player_.render(renderer_);
 }

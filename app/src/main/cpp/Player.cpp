@@ -24,14 +24,14 @@ Model PlayerModel(float x, float y) {
     return {
         .vertices = {
             // First triangle
-            x - 0.1f, y - 0.05f, 0.0f,  // Bottom left
-            x + 0.1f, y - 0.05f, 0.0f,  // Bottom right
-            x + 0.1f,  y + 0.05f, 0.0f,  // Top right
+            x - 0.1f, y - 0.1f, 0.1f,  // Bottom left
+            x + 0.1f, y - 0.1f, 0.1f,  // Bottom right
+            x + 0.1f,  y + 0.1f, 0.1f,  // Top right
 
             // Second triangle
-            x + 0.1f,  y + 0.05f, 0.0f,  // Top right
-            x + -0.1f,  y + 0.05f, 0.0f,  // Top left
-            x + -0.1f, y - 0.05f, 0.0f   // Bottom left
+            x + 0.1f,  y + 0.1f, 0.1f,  // Top right
+            x + -0.1f,  y + 0.1f, 0.1f,  // Top left
+            x + -0.1f, y - 0.1f, 0.1f   // Bottom left
         },
         .normals = {
             // First triangle

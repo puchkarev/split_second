@@ -23,8 +23,10 @@ const char *vertexShaderSource = R"(
     varying vec3 vNormal;
     varying vec2 vTexCoord;
 
+    uniform mat4 uMVP;
+
     void main() {
-        gl_Position = aPosition;
+        gl_Position = uMVP * aPosition;
         vNormal = aNormal;
         vTexCoord = aTexCoord;
     }
@@ -110,6 +112,78 @@ GLuint createProgram(const char *vertexShaderSrc, const char *fragmentShaderSrc)
     return program;
 }
 
+void configureCamera(GLuint program, float cam_x, float cam_y, float cam_z,
+                     float fov_deg, float near_plane, float far_plane, float aspect_ratio) {
+    // Set up the camera matrices manually
+    // View matrix: positions the camera in the world space
+    // 4th column represents translation.
+    float view[16] = {
+            1, 0, 0, cam_x,
+            0, 1, 0, cam_y,
+            0, 0, 1, cam_z,
+            0, 0, 0, 1
+    };
+
+    // Calculate the top of the frustum based on FOV and near plane
+    float top = tan(fov_deg * 3.14159f / 360.0f) * near_plane;
+    // Calculate the bottom of the frustum
+    float bottom = -top;
+    // Calculate the right of the frustum based on aspect ratio
+    float right = top * aspect_ratio;
+    // Calculate the left of the frustum
+    float left = -right;
+
+    // Projection matrix: defines the perspective projection
+    float projection[16] = {
+            (2 * near_plane) / (right - left), 0, 0, 0,
+            0, (2 * near_plane) / (top - bottom), 0, 0,
+            (right + left) / (right - left),
+            (top + bottom) / (top - bottom),
+            -(far_plane + near_plane) / (far_plane - near_plane), -1,
+            0, 0, -(2 * far_plane * near_plane) / (far_plane - near_plane),
+    };
+
+    // Model matrix: defines the position and orientation of the model in the world space
+    float model[16] = {
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1
+    };
+
+    // MVP matrix: Model-View-Projection matrix to combine transformations
+    float mvp[16];
+    for (int i = 0; i < 16; ++i) {
+        mvp[i] = 0;
+    }
+
+    // Multiply projection, view, and model matrices to get the MVP matrix
+    for (int row = 0; row < 4; ++row) {
+        for (int col = 0; col < 4; ++col) {
+            for (int k = 0; k < 4; ++k) {
+                mvp[row * 4 + col] += projection[row * 4 + k] * view[k * 4 + col];
+            }
+        }
+    }
+
+    // Final MVP matrix after combining all transformations
+    float finalMVP[16];
+    for (int row = 0; row < 4; ++row) {
+        for (int col = 0; col < 4; ++col) {
+            finalMVP[row * 4 + col] = 0;
+            for (int k = 0; k < 4; ++k) {
+                finalMVP[row * 4 + col] += mvp[row * 4 + k] * model[k * 4 + col];
+            }
+        }
+    }
+
+    // Pass the final MVP matrix to the shader
+    GLuint mvpLocation = glGetUniformLocation(program, "uMVP");
+    if (mvpLocation != -1) {
+        glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, finalMVP);
+    }
+}
+
 GLuint loadTexture(const char *filePath) {
     int width, height, channels;
     unsigned char *data = stbi_load(filePath, &width, &height, &channels, 0);
@@ -132,14 +206,22 @@ GLuint loadTexture(const char *filePath) {
     return texture;
 }
 
+void startNewRender() {
+    // Enable depth test
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    // Enable face culling (optional)
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
+
+    // Clear both color and depth buffers before drawing each frame
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
 void renderModelUsingProgram(GLuint program, const Model &model, GLuint texture) {
     if (program == 0) return;
-
-    // Clear the color buffer
-    // glClear(GL_COLOR_BUFFER_BIT);
-
-    // glEnable(GL_DEPTH_TEST);
-    // glEnable(GL_CULL_FACE);
 
     // Use the shader program
     glUseProgram(program);
