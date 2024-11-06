@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.split_second"
+    namespace = "com.puchkarev.split_second"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.split_second"
+        applicationId = "com.puchkarev.split_second"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

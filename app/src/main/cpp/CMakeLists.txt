@@ -39,7 +39,6 @@ message(STATUS "CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR}")
 
 # include_directories(${CMAKE_SOURCE_DIR}/../third_party/stb)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../../third_party/stb)
-# include_directories(/Users/ittec/AndroidStudioProjects/split_second/third_party/stb)
 
 # Locates the relevant libraries
 find_library(gles-lib GLESv2) # Add OpenGL ES 2.0

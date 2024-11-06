@@ -1,4 +1,4 @@
-package com.example.split_second
+package com.puchkarev.split_second
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

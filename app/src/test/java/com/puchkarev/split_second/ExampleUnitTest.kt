@@ -1,4 +1,4 @@
-package com.example.split_second
+package com.puchkarev.split_second
 
 import org.junit.Test
 
