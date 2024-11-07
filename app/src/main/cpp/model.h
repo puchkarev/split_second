@@ -8,6 +8,12 @@
 #include <GLES2/gl2.h>
 #include <vector>
 
+enum BlockType {
+    BLOCK_ROAD,
+    BLOCK_LEFT_EDGE,
+    BLOCK_RIGHT_EDGE,
+};
+
 struct Model {
     std::vector<GLfloat> vertices;
     std::vector<GLfloat> normals;
@@ -16,6 +22,7 @@ struct Model {
 
     static Model PlayerModel(float x, float y, float z);
     static Model BackgroundModel(float x, float y, float z);
+    static Model BackgroundBlock(float x, float y, float z, BlockType type);
 };
 
 #endif //SPLIT_SECOND_MODEL_H
