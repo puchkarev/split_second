@@ -8,9 +8,9 @@
 #include "gl_assist.h"
 #include "renderer.h"
 
-Player::Player() {
-    x_ = 0.0f;
-    y_ = 0.0f;
+Player::Player(float x, float y) {
+    x_ = x;
+    y_ = y;
 }
 
 void Player::move(float x, float y) {
@@ -22,4 +22,8 @@ void Player::update(float /*dt*/) {}
 
 void Player::render(renderer& r) const {
     r.render(Model::PlayerModel(x_, y_, 0.1));
+}
+
+vec2d Player::pos() const {
+    return {x_, y_};
 }

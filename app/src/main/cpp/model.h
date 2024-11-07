@@ -20,8 +20,11 @@ struct Model {
     std::vector<GLfloat> texcoords;
     std::string texture;
 
+    [[nodiscard]] float SizeX() const;
+    [[nodiscard]] float SizeY() const;
+    [[nodiscard]] float SizeZ() const;
+
     static Model PlayerModel(float x, float y, float z);
-    static Model BackgroundModel(float x, float y, float z);
     static Model BackgroundBlock(float x, float y, float z, BlockType type);
 };
 

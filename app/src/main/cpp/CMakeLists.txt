@@ -33,6 +33,9 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         project_time.cpp
         renderer.cpp
         model.cpp
+        Road.cpp
+        box2d.cpp
+        vec2d.cpp
 )
 
 message(STATUS "CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")

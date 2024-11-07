@@ -6,8 +6,10 @@
 #include <EGL/egl.h>
 #include <malloc.h>
 
+#ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#endif  // STB_IMAGE_IMPLEMENTATION
 
 #include "gl_assist.h"
 #include "log.h"
@@ -121,6 +123,16 @@ GLuint createProgram(const char *vertexShaderSrc, const char *fragmentShaderSrc)
     return program;
 }
 
+CameraBox getCameraBox(float fov_deg, float dist, float aspect_ratio) {
+    const float top = tan(fov_deg * 3.14159f / 360.0f) * dist;
+    return {
+        .bottom = -top,
+        .top = top,
+        .left = -top * aspect_ratio,
+        .right = top * aspect_ratio,
+    };
+}
+
 void configureCamera(GLuint program, float cam_x, float cam_y, float cam_z,
                      float fov_deg, float near_plane, float far_plane, float aspect_ratio) {
     // Set up the camera matrices manually
@@ -133,21 +145,18 @@ void configureCamera(GLuint program, float cam_x, float cam_y, float cam_z,
             0, 0, 0, 1
     };
 
-    // Calculate the top of the frustum based on FOV and near plane
-    float top = tan(fov_deg * 3.14159f / 360.0f) * near_plane;
-    // Calculate the bottom of the frustum
-    float bottom = -top;
-    // Calculate the right of the frustum based on aspect ratio
-    float right = top * aspect_ratio;
-    // Calculate the left of the frustum
-    float left = -right;
+    const CameraBox camera_box = getCameraBox(fov_deg, near_plane, aspect_ratio);
+
+    LOG_INFO("Camera config pos(%f, %f, %f) x=(%f %f) y=(%f %f)",
+             cam_x, cam_y, cam_z, camera_box.left, camera_box.right,
+             camera_box.bottom, camera_box.top);
 
     // Projection matrix: defines the perspective projection
     float projection[16] = {
-            (2 * near_plane) / (right - left), 0, 0, 0,
-            0, (2 * near_plane) / (top - bottom), 0, 0,
-            (right + left) / (right - left),
-            (top + bottom) / (top - bottom),
+            (2 * near_plane) / (camera_box.right - camera_box.left), 0, 0, 0,
+            0, (2 * near_plane) / (camera_box.top - camera_box.bottom), 0, 0,
+            (camera_box.right + camera_box.left) / (camera_box.right - camera_box.left),
+            (camera_box.top + camera_box.bottom) / (camera_box.top - camera_box.bottom),
             -(far_plane + near_plane) / (far_plane - near_plane), -1,
             0, 0, -(2 * far_plane * near_plane) / (far_plane - near_plane),
     };

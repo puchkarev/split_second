@@ -24,6 +24,13 @@ GLuint loadTexture(unsigned char* data, int raw_data_len);
 
 GLuint createProgram(const char *vertexShaderSrc, const char *fragmentShaderSrc);
 
+struct CameraBox {
+    float bottom;
+    float top;
+    float left;
+    float right;
+};
+
 void configureCamera(GLuint program, float cam_x, float cam_y, float cam_z,
                      float fov_deg, float near_plane, float far_plane, float aspect_ratio);
 

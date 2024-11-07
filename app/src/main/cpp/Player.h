@@ -8,11 +8,16 @@
 #include <vector>
 
 #include "renderer.h"
+#include "box2d.h"
+#include "vec2d.h"
 
 // Represents the player model.
 class Player {
 public:
-    Player();
+    Player() : Player(0.0f, 0.0f) {}
+    Player(float x, float y);
+
+    vec2d pos() const;
 
     void move(float x, float y);
     void update(float dt);
