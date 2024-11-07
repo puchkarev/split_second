@@ -38,9 +38,18 @@ const char *fragmentShaderSource = R"(
     varying vec3 vNormal;
     varying vec2 vTexCoord;
 
+    uniform sampler2D uTexture;
+    uniform bool uUseTexture;
+
     void main() {
-        // Use the normal and texture coordinates for rendering (simple example)
-        gl_FragColor = vec4(vTexCoord, 0.5, 1.0); // Example rendering using texCoord as color
+        if (uUseTexture) {
+            // Sample the texture using the texture coordinates
+            vec4 textureColor = texture2D(uTexture, vTexCoord);
+            gl_FragColor = textureColor;
+        } else {
+            // Use the gradient if no texture is supplied
+            gl_FragColor = vec4(vTexCoord, 0.5, 1.0);
+        }
     }
 )";
 
@@ -184,11 +193,11 @@ void configureCamera(GLuint program, float cam_x, float cam_y, float cam_z,
     }
 }
 
-GLuint loadTexture(const char *filePath) {
+GLuint loadTexture(unsigned char* raw_data, int raw_data_len) {
     int width, height, channels;
-    unsigned char *data = stbi_load(filePath, &width, &height, &channels, 0);
+    unsigned char *data = stbi_load_from_memory(raw_data, raw_data_len, &width, &height, &channels, 0);
     if (!data) {
-        LOG_ERROR("Failed to load texture image: %s", filePath);
+        LOG_ERROR("Failed to load texture image");
         return 0;
     }
 
@@ -226,13 +235,19 @@ void renderModelUsingProgram(GLuint program, const Model &model, GLuint texture)
     // Use the shader program
     glUseProgram(program);
 
+    // Determine if we are using a texture
+    GLint useTextureHandle = glGetUniformLocation(program, "uUseTexture");
+    if (useTextureHandle != -1) {
+        glUniform1i(useTextureHandle, texture != 0 ? 1 : 0);
+    }
+
     // Bind the texture
     if (texture != 0) {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture);
         GLint textureHandle = glGetUniformLocation(program, "uTexture");
         if (textureHandle != -1) {
-            glUniform1i(textureHandle, 0);
+            glUniform1i(textureHandle, 0);  // GL_TEXTURE0 corresponds to 0
         }
     }
 

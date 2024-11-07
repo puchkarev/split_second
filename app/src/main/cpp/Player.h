@@ -14,17 +14,13 @@ class Player {
 public:
     Player();
 
-    void click(float x, float y);
-    void move(float dx, float dy);
+    void move(float x, float y);
     void update(float dt);
     void render(const renderer& r) const;
 
 private:
-    void update_speed();
-
     float x_;
     float y_;
-    float speed_;
 };
 
 #endif //SPLIT_SECOND_PLAYER_H

@@ -10,13 +10,16 @@
 
 class GameState {
 public:
-    GameState();
+    GameState(std::unique_ptr<renderer> renderer);
     void click(float x, float y);
     void update(float dt);
     void render();
 
 private:
-    renderer renderer_;
+    std::unique_ptr<renderer> renderer_;
+
+    int block_blue_tex_ = 0;
+
     Player player_;
     float last_update_;
     float y_;

@@ -10,54 +10,21 @@
 #include "project_time.h"
 #include "log.h"
 
-namespace {
-
-Model BackgroundModel(float x, float y) {
-    return {
-        .vertices {
-            x - 1.0f, y - 2.0f, 0.0f,  // Bottom left
-            x + 1.0f, y - 2.0f, 0.0f,  // Bottom right
-            x + 1.0f, y + 2.0f, 0.0f,  // Top right
-
-            x + 1.0f, y + 2.0f, 0.0f,  // Top right
-            x - 1.0f, y + 2.0f, 0.0f,   // Top left
-            x - 1.0f, y - 2.0f, 0.0f,  // Bottom left
-        },
-        .normals = {
-            // First triangle
-            0.0f, 0.0f, 1.0f,  // Bottom left
-            0.0f, 0.0f, 1.0f,  // Bottom right
-            0.0f, 0.0f, 1.0f,  // Top right
-
-            // Second triangle
-            0.0f, 0.0f, 1.0f,  // Top right
-            0.0f, 0.0f, 1.0f,  // Top left
-            0.0f, 0.0f, 1.0f   // Bottom left
-        },
-        .texcoords {
-            0.0f, 0.0f,  // Bottom left
-            1.0f, 0.0f,  // Bottom right
-            1.0f, 1.0f,  // Top right
-
-            1.0f, 1.0f,  // Top right
-            0.0f, 1.0f,   // Top left
-            0.0f, 0.0f,  // Bottom left
-        }
-    };
-}
-
-}  // namespace
-
-GameState::GameState() : renderer_(), player_(), y_(0.0f), x_(0.0f) {
+GameState::GameState(std::unique_ptr<renderer> renderer) : renderer_(std::move(renderer)), player_(), y_(0.0f), x_(0.0f) {
     LOG_INFO("Starting Game");
-    renderer_.configure_camera(0.0, 0.0, -20.0f,
+    renderer_->configure_camera(0.0, 0.0, -20.0f,
                                45.0f, 0.1f, 30.0f,
                                0.5f);
+
+    LOG_INFO("Loading textures");
+    block_blue_tex_ = renderer_->load_texture("block_blue.png");
+    if (block_blue_tex_ == 0) LOG_ERROR("Failed to load texture");
+
     last_update_ = getCurrentTimeSeconds();
 }
 
 void GameState::click(float x, float y) {
-    player_.click(x, y);
+    player_.move(x, y * 2.5);
 }
 
 void GameState::update(float dt) {
@@ -70,7 +37,7 @@ void GameState::render() {
     update(dt);
     last_update_ = now;
 
-    renderer_.start_new_render();
-    renderer_.render(BackgroundModel(x_, y_), 0);
-    player_.render(renderer_);
+    renderer_->start_new_render();
+    renderer_->render(Model::BackgroundModel(x_, y_, 0.0), block_blue_tex_);
+    player_.render(*renderer_);
 }

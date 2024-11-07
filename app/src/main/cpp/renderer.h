@@ -5,11 +5,13 @@
 #ifndef SPLIT_SECOND_RENDERER_H
 #define SPLIT_SECOND_RENDERER_H
 
+#include <android/asset_manager.h>
+
 #include "model.h"
 
 class renderer {
 public:
-    renderer();
+    renderer(AAssetManager *asset_manager);
     ~renderer();
 
     int load_texture(const char *filePath) const;
@@ -22,6 +24,7 @@ public:
 
 private:
     int program_ = 0;
+    AAssetManager *asset_manager_ = nullptr;
 };
 
 

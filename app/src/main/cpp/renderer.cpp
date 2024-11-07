@@ -9,8 +9,30 @@
 
 #include "gl_assist.h"
 #include "model.h"
+#include "log.h"
 
-renderer::renderer() {
+unsigned char* read_file(AAssetManager *asset_manager, const char* filePath, int *len) {
+    if (asset_manager == nullptr) {
+        LOG_ERROR("AssetManager not set");
+        return nullptr;
+    }
+
+    AAsset *asset = AAssetManager_open(asset_manager, filePath, AASSET_MODE_BUFFER);
+    if (!asset) {
+        LOG_ERROR("Failed to open asset: %s", filePath);
+        return nullptr;
+    }
+
+    off_t assetLength = AAsset_getLength(asset);
+    unsigned char *data = (unsigned char *)malloc(assetLength);
+    AAsset_read(asset, data, assetLength);
+    AAsset_close(asset);
+    *len = assetLength;
+
+    return data;
+}
+
+renderer::renderer(AAssetManager *asset_manager) : asset_manager_(asset_manager) {
     program_ = static_cast<int>(createProgram(shaders::getVertexShaderSource(),
                                               shaders::getFragmentShaderSource()));
 }
@@ -23,7 +45,12 @@ renderer::~renderer() {
 
 int renderer::load_texture(const char* filePath) const {
     if (program_ == 0) return 0;
-    return static_cast<int>(loadTexture(filePath));
+    int len = 0;
+    unsigned char* raw_data = read_file(asset_manager_, filePath, &len);
+    if (raw_data == nullptr) return 0;
+    int tex_id = static_cast<int>(loadTexture(raw_data, len));
+    free(raw_data);
+    return tex_id;
 }
 
 void renderer::configure_camera(float cam_x, float cam_y, float cam_z,

@@ -32,6 +32,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         gl_assist.cpp
         project_time.cpp
         renderer.cpp
+        model.cpp
 )
 
 message(STATUS "CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")

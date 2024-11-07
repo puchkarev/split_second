@@ -20,7 +20,7 @@ const char* getFragmentShaderSource();
 
 GLuint loadShader(GLenum type, const char *shaderSrc);
 
-GLuint loadTexture(const char *filePath);
+GLuint loadTexture(unsigned char* data, int raw_data_len);
 
 GLuint createProgram(const char *vertexShaderSrc, const char *fragmentShaderSrc);
 
