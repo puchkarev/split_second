@@ -15,11 +15,6 @@ GameState::GameState(std::unique_ptr<renderer> renderer) : renderer_(std::move(r
     renderer_->configure_camera(0.0, 0.0, -20.0f,
                                45.0f, 0.1f, 30.0f,
                                0.5f);
-
-    LOG_INFO("Loading textures");
-    block_blue_tex_ = renderer_->load_texture("block_blue.png");
-    if (block_blue_tex_ == 0) LOG_ERROR("Failed to load texture");
-
     last_update_ = getCurrentTimeSeconds();
 }
 
@@ -38,6 +33,6 @@ void GameState::render() {
     last_update_ = now;
 
     renderer_->start_new_render();
-    renderer_->render(Model::BackgroundModel(x_, y_, 0.0), block_blue_tex_);
+    renderer_->render(Model::BackgroundModel(x_, y_, 0.0));
     player_.render(*renderer_);
 }

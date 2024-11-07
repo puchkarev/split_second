@@ -16,7 +16,7 @@ public:
 
     void move(float x, float y);
     void update(float dt);
-    void render(const renderer& r) const;
+    void render(renderer& r) const;
 
 private:
     float x_;

@@ -17,9 +17,6 @@ public:
 
 private:
     std::unique_ptr<renderer> renderer_;
-
-    int block_blue_tex_ = 0;
-
     Player player_;
     float last_update_;
     float y_;

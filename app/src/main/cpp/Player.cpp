@@ -20,6 +20,6 @@ void Player::move(float x, float y) {
 
 void Player::update(float /*dt*/) {}
 
-void Player::render(const renderer& r) const {
-    r.render(Model::PlayerModel(x_, y_, 0.1), 0);
+void Player::render(renderer& r) const {
+    r.render(Model::PlayerModel(x_, y_, 0.1));
 }

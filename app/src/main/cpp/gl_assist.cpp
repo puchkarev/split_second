@@ -16,30 +16,30 @@ namespace shaders {
 namespace {
 
 const char *vertexShaderSource = R"(
-    attribute vec4 aPosition;
-    attribute vec3 aNormal;
-    attribute vec2 aTexCoord;
+    attribute vec4 aPosition;   // Vertex position
+    attribute vec3 aNormal;     // Vertex normal (not used here)
+    attribute vec2 aTexCoord;   // Texture coordinates for this vertex
 
-    varying vec3 vNormal;
-    varying vec2 vTexCoord;
+    varying vec3 vNormal;       // Passing normal to fragment shader
+    varying vec2 vTexCoord;     // Passing texture coordinates to fragment shader
 
-    uniform mat4 uMVP;
+    uniform mat4 uMVP;          // Model-View-Projection matrix
 
     void main() {
-        gl_Position = uMVP * aPosition;
-        vNormal = aNormal;
-        vTexCoord = aTexCoord;
+        gl_Position = uMVP * aPosition;     // Transform the vertex position
+        vNormal = aNormal;                  // Pass the normal to the fragment shader
+        vTexCoord = aTexCoord;              // Pass the texture coordinates to the fragment shader
     }
 )";
 
 const char *fragmentShaderSource = R"(
     precision mediump float;
 
-    varying vec3 vNormal;
-    varying vec2 vTexCoord;
+    varying vec3 vNormal;       // Normal for lighting (not used in this example)
+    varying vec2 vTexCoord;     // Texture coordinates from the vertex shader
 
-    uniform sampler2D uTexture;
-    uniform bool uUseTexture;
+    uniform sampler2D uTexture; // The texture sampler
+    uniform bool uUseTexture;   // Flag to determine if a texture is available
 
     void main() {
         if (uUseTexture) {

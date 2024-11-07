@@ -43,13 +43,16 @@ renderer::~renderer() {
     }
 }
 
-int renderer::load_texture(const char* filePath) const {
+int renderer::load_texture(const std::string& asset_path) {
     if (program_ == 0) return 0;
+    if (textures_.find(asset_path) != textures_.end()) return textures_[asset_path];
+
     int len = 0;
-    unsigned char* raw_data = read_file(asset_manager_, filePath, &len);
+    unsigned char* raw_data = read_file(asset_manager_, asset_path.c_str(), &len);
     if (raw_data == nullptr) return 0;
     int tex_id = static_cast<int>(loadTexture(raw_data, len));
     free(raw_data);
+    textures_[asset_path] = tex_id;
     return tex_id;
 }
 
@@ -66,8 +69,10 @@ void renderer::start_new_render() const {
     startNewRender();
 }
 
-void renderer::render(const Model& model, int texture) const {
+void renderer::render(const Model& model) {
     if (program_ == 0) return;
+
+    const int texture = model.texture.empty() ? 0 : load_texture(model.texture);
     renderModelUsingProgram(static_cast<GLuint>(program_), model,
                             static_cast<GLuint>(texture));
 }

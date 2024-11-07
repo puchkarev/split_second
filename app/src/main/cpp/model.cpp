@@ -39,6 +39,7 @@ Model Model::PlayerModel(float x, float y, float z) {
                     0.0f, 1.0f,  // Top left (green)
                     0.0f, 1.0f   // Bottom left (green)
             },
+            // .texture = "block_blue.png",
     };
 }
 
@@ -65,13 +66,14 @@ Model Model::BackgroundModel(float x, float y, float z) {
                     0.0f, 0.0f, 1.0f   // Bottom left
             },
             .texcoords {
-                    0.0f, 0.0f,  // Bottom left
-                    1.0f, 0.0f,  // Bottom right
-                    1.0f, 1.0f,  // Top right
+                    0.0f, 2.0f,  // Bottom left
+                    1.0f, 2.0f,  // Bottom right
+                    1.0f, 0.0f,  // Top right
 
-                    1.0f, 1.0f,  // Top right
-                    0.0f, 1.0f,   // Top left
-                    0.0f, 0.0f,  // Bottom left
-            }
+                    1.0f, 0.0f,  // Top right
+                    0.0f, 0.0f,   // Top left
+                    0.0f, 2.0f,  // Bottom left
+            },
+            .texture = "feature_image.png",
     };
 }
