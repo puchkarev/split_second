@@ -3,8 +3,10 @@
 #include <android/asset_manager_jni.h>
 
 #include "GameState.h"
+
 #include "graphics/renderer.h"
 #include "geometry/mat.h"
+
 #include "util/log.h"
 
 GameState* g_state_ = nullptr;

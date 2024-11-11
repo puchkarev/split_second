@@ -9,9 +9,7 @@
 #include <GLES2/gl2.h>
 #include <vector>
 
-#include "../geometry/vec3d.h"
-#include "../geometry/box2d.h"
-#include "model.h"
+#include "../geometry/mat.h"
 
 namespace shaders {
 
@@ -21,18 +19,15 @@ const char* getFragmentShaderSource();
 }  // shaders
 
 GLuint loadShader(GLenum type, const char *shaderSrc);
-
 GLuint loadTexture(unsigned char* data, int raw_data_len);
-
-GLuint createProgram(const char *vertexShaderSrc, const char *fragmentShaderSrc);
-
-box2d getCameraBox(float fov_deg, float dist, float aspect_ratio);
-
-void configureCamera(GLuint program, vec3d camera_position, vec3d camera_target, vec3d camera_up,
-                     float fov_deg, float near_plane, float far_plane, float aspect_ratio);
+GLuint createProgram(const char *vertexShaderSrc = nullptr, const char *fragmentShaderSrc = nullptr);
 
 void startNewRender();
-
-void renderModelUsingProgram(GLuint program, const Model& model, GLuint texture);
+void configureCamera(GLuint program, const mat& mvp);
+void renderModelUsingProgram(GLuint program,
+                             const std::vector<GLfloat>& vertices,
+                             const std::vector<GLfloat>& normals,
+                             const std::vector<GLfloat>& texcoords,
+                             GLuint texture);
 
 #endif //SPLIT_SECOND_GRAPHICS_GL_ASSIST_H

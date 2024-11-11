@@ -5,17 +5,18 @@
 #ifndef SPLIT_SECOND_ROAD_H
 #define SPLIT_SECOND_ROAD_H
 
+#include "Models.h"
+
 #include "graphics/renderer.h"
 #include "graphics/model.h"
 #include "geometry/box2d.h"
-#include "Models.h"
 
 class Road {
 public:
     Road() : Road(0.0, 0.0, 0.0, 0.0) {}
     Road(float size_x, float size_y, float x_offset, float y_offset);
 
-    [[nodiscard]] box2d box() const;
+    [[nodiscard]] float length() const;
 
     void update(float dt, float speed);
     void render(renderer& r) const;

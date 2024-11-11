@@ -4,11 +4,14 @@
 #include "Player.h"
 
 #include "util/log.h"
+#include "Models.h"
+
 #include "geometry/vec2d.h"
+#include "geometry/mat.h"
 #include "graphics/model.h"
+
 #include "graphics/gl_assist.h"
 #include "graphics/renderer.h"
-#include "Models.h"
 
 Player::Player(float x, float y) {
     x_ = x;
@@ -25,7 +28,8 @@ void Player::update(float /*dt*/, float /*speed*/) {
 }
 
 void Player::render(renderer& r) const {
-    r.render(Models::PlayerModel(x_, y_, 0.1));
+    r.render(Models::PlayerModel(),
+             mat::translate({x_, y_, 0.1}));
 }
 
 vec2d Player::pos() const {

@@ -15,9 +15,8 @@ public:
         BLOCK_RIGHT_EDGE,
     };
 
-    static Model PlayerModel(float x, float y, float z);
-    static Model BackgroundBlock(float x, float y, float z, BlockType type);
-    static Model Axis(float x, float y, float z);
+    static Model PlayerModel();
+    static Model BackgroundBlock(BlockType type);
 };
 
 #endif //SPLIT_SECOND_MODELS_H

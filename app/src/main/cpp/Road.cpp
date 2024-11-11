@@ -4,19 +4,24 @@
 
 #include "Road.h"
 
-#include "util/log.h"
+#include "Models.h"
+
 #include "graphics/renderer.h"
 #include "graphics/model.h"
 #include "geometry/box2d.h"
-#include "Models.h"
+
+#include "util/log.h"
+#include "util/assert.h"
 
 constexpr float kRoadZ = 0.0f;
 
 Road::Road(float size_x, float size_y, float x_offset, float y_offset) :
     x_position_(x_offset), y_position_(y_offset) {
-    const Model block = Models::BackgroundBlock(0.0, 0.0, 0.0, Models::BLOCK_ROAD);
+    const Model block = Models::BackgroundBlock(Models::BLOCK_ROAD);
     block_size_x_ = block.SizeX();
+    ASSERT_GT(block_size_x_, 0.0f);
     block_size_y_ = block.SizeY();
+    ASSERT_GT(block_size_y_, 0.0f);
 
     const int blocks_x = static_cast<int>(ceil(size_x / block_size_x_)) - 1;
     const int blocks_y = static_cast<int>(ceil(size_y / block_size_y_));
@@ -35,13 +40,8 @@ Road::Road(float size_x, float size_y, float x_offset, float y_offset) :
              x_position_, y_position_);
 }
 
-box2d Road::box() const {
-    return {
-        x_position_,
-        y_position_,
-        block_size_x_ * static_cast<float>(blocks_.front().size()),
-        block_size_y_ * static_cast<float>(blocks_.size()),
-    };
+float Road::length() const {
+    return block_size_y_ * static_cast<float>(blocks_.size() - 1);
 }
 
 void Road::update(float /*dt*/, float /*speed*/) {
@@ -50,15 +50,16 @@ void Road::update(float /*dt*/, float /*speed*/) {
 
 void Road::render(renderer& r) const {
     const int count_y = static_cast<int>(blocks_.size());
-    const int count_x = static_cast<int>(blocks_.front().size());
+    const int count_x = static_cast<int>(blocks_.empty() ? 0 : blocks_.front().size());
     float start_x = -block_size_x_ * static_cast<float>(count_x - 1) * 0.5f;
-    float start_y = -block_size_y_ * static_cast<float>(count_y - 1) * 0.5f + y_position_;
+    float start_y = y_position_;
 
     for (int by = 0; by < count_y; ++by) {
         const float y = start_y + static_cast<float>(by) * block_size_y_;
         for (int bx = 0; bx < count_x; ++bx) {
             const float x = start_x + static_cast<float>(bx) * block_size_x_ + x_position_;
-            r.render(Models::BackgroundBlock(x, y, kRoadZ, blocks_[by][bx]));
+            r.render(Models::BackgroundBlock(blocks_[by][bx]),
+                     mat::translate({x, y, kRoadZ}));
         }
     }
 }

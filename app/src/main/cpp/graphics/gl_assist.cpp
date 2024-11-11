@@ -13,7 +13,6 @@
 
 #include "gl_assist.h"
 #include "../util/log.h"
-#include "../geometry/vec3d.h"
 #include "../geometry/mat.h"
 
 namespace shaders {
@@ -31,8 +30,8 @@ const char *vertexShaderSource = R"(
 
     void main() {
         gl_Position = uMVP * aPosition;     // Transform the vertex position
-        vNormal = aNormal;                  // Pass the normal to the fragment shader
-        vTexCoord = aTexCoord;              // Pass the texture coordinates to the fragment shader
+        vNormal = aNormal;                           // Pass the normal to the fragment shader
+        vTexCoord = aTexCoord;                       // Pass the texture coordinates to the fragment shader
     }
 )";
 
@@ -92,8 +91,8 @@ GLuint loadShader(GLenum type, const char *shaderSrc) {
 }
 
 GLuint createProgram(const char *vertexShaderSrc, const char *fragmentShaderSrc) {
-    GLuint vertexShader = loadShader(GL_VERTEX_SHADER, vertexShaderSrc);
-    GLuint fragmentShader = loadShader(GL_FRAGMENT_SHADER, fragmentShaderSrc);
+    GLuint vertexShader = loadShader(GL_VERTEX_SHADER, vertexShaderSrc == nullptr ? shaders::getVertexShaderSource() : vertexShaderSrc);
+    GLuint fragmentShader = loadShader(GL_FRAGMENT_SHADER, fragmentShaderSrc == nullptr ? shaders::getFragmentShaderSource() : fragmentShaderSrc);
 
     GLuint program = glCreateProgram();
     if (program == 0) {
@@ -125,89 +124,7 @@ GLuint createProgram(const char *vertexShaderSrc, const char *fragmentShaderSrc)
     return program;
 }
 
-box2d getCameraBox(float fov_deg, float dist, float aspect_ratio) {
-    const float height = tan(fov_deg * 3.14159f / 360.0f) * dist * 2.0f;
-    return {0.0, 0.0, height * aspect_ratio, height};
-}
-
-mat getViewMatrix(vec3d eye, vec3d target, vec3d up) {
-    vec3d f = (target - eye).normalized();                // Forward
-    vec3d r = f.cross_product(up).normalized();     // Right
-    vec3d u = r.cross_product(f);                   // True Up
-
-    // LOG_INFO("f=%s r=%s u=%s", f.DebugString().c_str(), r.DebugString().c_str(), u.DebugString().c_str());
-
-    return mat(4, 4, {
-        r.x(), r.y(), r.z(), -r.dot_product(eye),
-        u.x(), u.y(), u.z(), -u.dot_product(eye),
-        -f.x(), -f.y(), -f.z(), f.dot_product(eye),
-        0.0, 0.0, 0.0, 1.0
-    });
-}
-
-mat getPerspectiveMatrix(float fov_deg, float aspect, float near, float far) {
-    const float fov_rad = fov_deg * 3.1415f / 180.0f;
-    const float tanHalfFov = tan(fov_rad / 2.0f);
-
-    return mat(4, 4, {
-            1.0f / (aspect * tanHalfFov), 0.0f, 0.0f, 0.0f,
-            0.0f, 1.0f / tanHalfFov, 0.0f, 0.0f,
-            0.0f, 0.0f, -(far + near) / (far - near), -1.0f,
-            0.0f, 0.0f, -(2.0f * far * near) / (far - near), 1.0f
-    });
-}
-
-mat getProjectionMatrix(float fov_deg, float aspect_ratio, float near_plane, float far_plane) {
-    // Projection matrix: defines the perspective projection
-    const box2d camera_box = getCameraBox(fov_deg, near_plane, aspect_ratio);
-    return mat(4, 4, {
-            (2 * near_plane) / (camera_box.right() - camera_box.left()), 0, 0, 0,
-            0, (2 * near_plane) / (camera_box.top() - camera_box.bottom()), 0, 0,
-            (camera_box.right() + camera_box.left()) / (camera_box.right() - camera_box.left()),
-            (camera_box.top() + camera_box.bottom()) / (camera_box.top() - camera_box.bottom()),
-            -(far_plane + near_plane) / (far_plane - near_plane), -1,
-            0, 0, -(2 * far_plane * near_plane) / (far_plane - near_plane), 1
-    });
-}
-
-mat getOrthographicMatrix(float left, float right, float bottom, float top, float near, float far) {
-    return mat(4, 4, {
-            2.0f / (right - left), 0.0f, 0.0f, -(right + left) / (right - left),
-            0.0f, 2.0f / (top - bottom), 0.0f, -(top + bottom) / (top - bottom),
-            0.0f, 0.0f, -2.0f / (far - near), -(far + near) / (far - near),
-            0.0f, 0.0f, 0.0f, 1.0f
-    });
-}
-
-void configureCamera(GLuint program,
-                     vec3d camera_position,
-                     vec3d camera_target,
-                     vec3d camera_up,
-                     float fov_deg, float near_plane, float far_plane, float aspect_ratio) {
-    // LOG_INFO("Camera position=%s target=%s up=%s",
-    //         camera_position.DebugString().c_str(),
-    //         camera_target.DebugString().c_str(),
-    //         camera_up.DebugString().c_str());
-
-    // Create the view matrix using right, up, and forward vectors
-    const mat view = getViewMatrix(camera_position, camera_target, camera_up);
-
-    // Projection matrix: defines the perspective projection
-    const mat projection = getPerspectiveMatrix(fov_deg, aspect_ratio, near_plane, far_plane);
-    // const mat projection = getOrthographicMatrix(-5, 5, -10, 10, near_plane, far_plane);
-
-    // Model matrix: defines the position and orientation of the model in the world space
-    const mat model = mat::identity(4);
-
-    // MVP matrix: Model-View-Projection matrix to combine transformations
-    // Multiply projection, view, and model matrices to get the MVP matrix
-    const mat mvp = projection * view * model;
-
-    // LOG_INFO("view\n%s", view.DebugString().c_str());
-    // LOG_INFO("projection\n%s", projection.DebugString().c_str());
-    // LOG_INFO("model\n%s", model.DebugString().c_str());
-    // LOG_INFO("mpv\n%s", mvp.DebugString().c_str());
-
+void configureCamera(GLuint program, const mat& mvp) {
     // Pass the final MVP matrix to the shader
     GLint mvpLocation = glGetUniformLocation(program, "uMVP");
     if (mvpLocation != -1) {
@@ -251,7 +168,11 @@ void startNewRender() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void renderModelUsingProgram(GLuint program, const Model &model, GLuint texture) {
+void renderModelUsingProgram(GLuint program,
+                             const std::vector<GLfloat>& vertices,
+                             const std::vector<GLfloat>& normals,
+                             const std::vector<GLfloat>& texcoords,
+                             GLuint texture) {
     if (program == 0) return;
 
     // Use the shader program
@@ -277,25 +198,25 @@ void renderModelUsingProgram(GLuint program, const Model &model, GLuint texture)
     GLuint positionHandle = glGetAttribLocation(program, "aPosition");
     if (positionHandle != -1) {
         glEnableVertexAttribArray(positionHandle);
-        glVertexAttribPointer(positionHandle, 3, GL_FLOAT, GL_FALSE, 0, model.vertices.data());
+        glVertexAttribPointer(positionHandle, 3, GL_FLOAT, GL_FALSE, 0, vertices.data());
     }
 
     // Pass in normal data, if available
     GLuint normalHandle = glGetAttribLocation(program, "aNormal");
-    if (normalHandle != -1 && !model.normals.empty()) {
+    if (normalHandle != -1 && !normals.empty()) {
         glEnableVertexAttribArray(normalHandle);
-        glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0, model.normals.data());
+        glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0, normals.data());
     }
 
     // Pass in texture coordinate data, if available
     GLuint texCoordHandle = glGetAttribLocation(program, "aTexCoord");
-    if (texCoordHandle != -1 && !model.texcoords.empty()) {
+    if (texCoordHandle != -1 && !texcoords.empty()) {
         glEnableVertexAttribArray(texCoordHandle);
-        glVertexAttribPointer(texCoordHandle, 2, GL_FLOAT, GL_FALSE, 0, model.texcoords.data());
+        glVertexAttribPointer(texCoordHandle, 2, GL_FLOAT, GL_FALSE, 0, texcoords.data());
     }
 
     // Draw the model using GL_TRIANGLES (assuming your model is composed of triangles)
-    glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(model.vertices.size() / 3));
+    glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(vertices.size() / 3));
 
     // Disable attribute arrays to clean up
     if (positionHandle != -1) {

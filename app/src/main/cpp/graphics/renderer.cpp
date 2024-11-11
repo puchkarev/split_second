@@ -9,6 +9,7 @@
 
 #include "gl_assist.h"
 #include "model.h"
+
 #include "../util/log.h"
 
 unsigned char* read_file(AAssetManager *asset_manager, const char* filePath, int *len) {
@@ -56,14 +57,8 @@ int renderer::load_texture(const std::string& asset_path) {
     return tex_id;
 }
 
-void renderer::configure_camera(vec3d camera_position, vec3d camera_target, vec3d camera_up,
-                                float fov_deg, float near_plane, float far_plane,
-                                float aspect_ratio) const {
-    if (program_ == 0) return;
-    configureCamera(static_cast<GLuint>(program_),
-                    camera_position, camera_target, camera_up,
-                    fov_deg, near_plane, far_plane,
-                    aspect_ratio);
+camera& renderer::mutable_camera() {
+    return camera_;
 }
 
 void renderer::start_new_render() const {
@@ -71,10 +66,15 @@ void renderer::start_new_render() const {
     startNewRender();
 }
 
-void renderer::render(const Model& model) {
+void renderer::render(const Model& model, const mat& model_transform) {
     if (program_ == 0) return;
 
     const int texture = model.texture.empty() ? 0 : load_texture(model.texture);
-    renderModelUsingProgram(static_cast<GLuint>(program_), model,
+    configureCamera(static_cast<GLuint>(program_),
+                    model_transform.empty() ? camera_.mvp() : camera_.mvp() * model_transform);
+    renderModelUsingProgram(static_cast<GLuint>(program_),
+                            model.vertices,
+                            model.normals.empty() ? Model::ComputeNormals(model.vertices) : model.normals,
+                            model.texcoords,
                             static_cast<GLuint>(texture));
 }

@@ -38,7 +38,7 @@ float Model::SizeZ() const {
     return max_ - min_;
 }
 
-std::vector<GLfloat> ComputeNormals(const std::vector<GLfloat>& vertices) {
+std::vector<GLfloat> Model::ComputeNormals(const std::vector<GLfloat>& vertices) {
     ASSERT_EQ(vertices.size() % 3, 0);
     std::vector<GLfloat> normals;
     for (int i = 0; i < vertices.size(); i += 9) {
