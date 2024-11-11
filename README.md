@@ -35,3 +35,34 @@ The nuance of this specific version is that after you complete the first level, 
 run, and this will also continue repeating for each following run. Note however since the same rules apply for all other preceding runs on the speed boost,
 that means that if you end up driving in front of another (previous run) you will affect how they drive, and if that causes them to die you fail and will
 have to retry this level.
+
+# Google Play Store
+
+The game is currently published (here)[https://play.google.com/store/apps/details?id=com.puchkarev.split_second]
+
+## Testing
+
+### Internal Testers
+
+To join the Internal Testers:
+Follow this (link)[https://play.google.com/apps/internaltest/4701096607627280823]
+
+### Closed Testers
+
+To join the Closed Testers:
+On Android follow this (link)[https://play.google.com/store/apps/details?id=com.puchkarev.split_second]
+On Web follow this (link)[https://play.google.com/apps/testing/com.puchkarev.split_second]
+
+### Open Testers
+
+To join the Open Testers:
+Not yet available, since I did not complete production access requirements on Google Play Store.
+
+Need:
+
+* 20 closed testers
+* Need to run a 14 day test with 20 testers
+
+### Production
+
+Don't have access yet until I complete the requirements above.
