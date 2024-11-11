@@ -66,3 +66,17 @@ Need:
 ### Production
 
 Don't have access yet until I complete the requirements above.
+
+# Development
+
+I'm open for other people participation. Just ping me.
+Definitely open for game ideas, and for coding participation.
+
+## Links
+
+Some userful links for myself:
+* [Play Console Admin Page](https://play.google.com/console/u/0/developers/8876770894052468424/app/4972653238062659679/app-dashboard?timespan=thirtyDays)
+
+## Dependencies
+
+Currently depend on the [stb](https://github.com/nothings/stb) project for texture loading.
