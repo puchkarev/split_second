@@ -4,10 +4,8 @@
 
 #include "renderer.h"
 
-#include <EGL/egl.h>
-#include <GLES2/gl2.h>
-
 #include "gl_assist.h"
+#include "image.h"
 #include "model.h"
 
 #include "../util/log.h"
@@ -34,24 +32,26 @@ unsigned char* read_file(AAssetManager *asset_manager, const char* filePath, int
 }
 
 renderer::renderer(AAssetManager *asset_manager) : asset_manager_(asset_manager) {
-    program_ = static_cast<int>(createProgram(shaders::getVertexShaderSource(),
-                                              shaders::getFragmentShaderSource()));
+    program_ = createProgram();
 }
 
 renderer::~renderer() {
     if (program_ != 0) {
-        glDeleteProgram(program_);
+        deleteProgram(program_);
     }
 }
 
-int renderer::load_texture(const std::string& asset_path) {
+uint renderer::load_texture(const std::string& asset_path) {
     if (program_ == 0) return 0;
     if (textures_.find(asset_path) != textures_.end()) return textures_[asset_path];
 
     int len = 0;
     unsigned char* raw_data = read_file(asset_manager_, asset_path.c_str(), &len);
     if (raw_data == nullptr) return 0;
-    int tex_id = static_cast<int>(loadTexture(raw_data, len));
+    const image image(raw_data, len);
+    if (!image.valid()) return 0;
+    uint tex_id = loadTexture(image.width(), image.height(), image.channels(),
+                             image.data());
     free(raw_data);
     textures_[asset_path] = tex_id;
     return tex_id;
@@ -69,12 +69,11 @@ void renderer::start_new_render() const {
 void renderer::render(const Model& model, const mat& model_transform) {
     if (program_ == 0) return;
 
-    const int texture = model.texture.empty() ? 0 : load_texture(model.texture);
-    configureCamera(static_cast<GLuint>(program_),
-                    model_transform.empty() ? camera_.mvp() : camera_.mvp() * model_transform);
-    renderModelUsingProgram(static_cast<GLuint>(program_),
-                            model.vertices,
-                            model.normals.empty() ? Model::ComputeNormals(model.vertices) : model.normals,
-                            model.texcoords,
-                            static_cast<GLuint>(texture));
+    const uint texture = model.texture.empty() ? 0 : load_texture(model.texture);
+    const mat mvp = camera_.mvp() * model_transform;
+    configureCamera(program_,
+                    mvp.data(), mvp.row_major());
+    const std::vector<float> normals =
+            model.normals.empty() ? Model::ComputeNormals(model.vertices) : model.normals;
+    renderModelUsingProgram(program_, model.vertices, normals, model.texcoords, texture);
 }

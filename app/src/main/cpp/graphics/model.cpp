@@ -5,7 +5,6 @@
 #include "model.h"
 
 #include "../geometry/vec3d.h"
-#include "../util/log.h"
 #include "../util/assert.h"
 
 float Model::SizeX() const {
@@ -38,9 +37,9 @@ float Model::SizeZ() const {
     return max_ - min_;
 }
 
-std::vector<GLfloat> Model::ComputeNormals(const std::vector<GLfloat>& vertices) {
+std::vector<float> Model::ComputeNormals(const std::vector<float>& vertices) {
     ASSERT_EQ(vertices.size() % 3, 0);
-    std::vector<GLfloat> normals;
+    std::vector<float> normals;
     for (int i = 0; i < vertices.size(); i += 9) {
         const vec3d a(vertices[i + 0], vertices[i + 1], vertices[i + 2]);
         const vec3d b(vertices[i + 3], vertices[i + 4], vertices[i + 5]);

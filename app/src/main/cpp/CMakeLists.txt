@@ -38,6 +38,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
 
         graphics/camera.cpp
         graphics/gl_assist.cpp
+        graphics/image.cpp
         graphics/model.cpp
         graphics/renderer.cpp
 

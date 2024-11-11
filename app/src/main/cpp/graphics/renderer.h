@@ -18,15 +18,16 @@ public:
     explicit renderer(AAssetManager *asset_manager);
     ~renderer();
 
-    int load_texture(const std::string& asset_path);
     camera& mutable_camera();
     void start_new_render() const;
     void render(const Model& model, const mat& model_transform = mat::identity(4));
 
 private:
+    uint load_texture(const std::string& asset_path);
+
     AAssetManager *asset_manager_ = nullptr;
-    int program_ = 0;
-    std::map<std::string, int> textures_;
+    uint program_ = 0;
+    std::map<std::string, uint> textures_;
     camera camera_;
 };
 

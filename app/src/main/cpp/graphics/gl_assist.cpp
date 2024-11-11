@@ -6,14 +6,9 @@
 #include <EGL/egl.h>
 #include <malloc.h>
 
-#ifndef STB_IMAGE_IMPLEMENTATION
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-#endif  // STB_IMAGE_IMPLEMENTATION
-
 #include "gl_assist.h"
+
 #include "../util/log.h"
-#include "../geometry/mat.h"
 
 namespace shaders {
 namespace {
@@ -56,8 +51,6 @@ const char *fragmentShaderSource = R"(
     }
 )";
 
-}  // namespace
-
 const char *getVertexShaderSource() {
     return vertexShaderSource;
 }
@@ -65,8 +58,6 @@ const char *getVertexShaderSource() {
 const char *getFragmentShaderSource() {
     return fragmentShaderSource;
 }
-
-}  // shaders
 
 GLuint loadShader(GLenum type, const char *shaderSrc) {
     GLuint shader = glCreateShader(type);
@@ -79,7 +70,7 @@ GLuint loadShader(GLenum type, const char *shaderSrc) {
         GLint infoLen = 0;
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
         if (infoLen > 0) {
-            char *infoLog = (char *)malloc(infoLen);
+            char *infoLog = (char *) malloc(infoLen);
             glGetShaderInfoLog(shader, infoLen, nullptr, infoLog);
             LOG_ERROR("Error compiling shader: %s", infoLog);
             free(infoLog);
@@ -90,9 +81,12 @@ GLuint loadShader(GLenum type, const char *shaderSrc) {
     return shader;
 }
 
-GLuint createProgram(const char *vertexShaderSrc, const char *fragmentShaderSrc) {
-    GLuint vertexShader = loadShader(GL_VERTEX_SHADER, vertexShaderSrc == nullptr ? shaders::getVertexShaderSource() : vertexShaderSrc);
-    GLuint fragmentShader = loadShader(GL_FRAGMENT_SHADER, fragmentShaderSrc == nullptr ? shaders::getFragmentShaderSource() : fragmentShaderSrc);
+}  // namespace
+}  // namespace shaders
+
+uint createProgram() {
+    GLuint vertexShader = shaders::loadShader(GL_VERTEX_SHADER, shaders::vertexShaderSource);
+    GLuint fragmentShader = shaders::loadShader(GL_FRAGMENT_SHADER, shaders::fragmentShaderSource);
 
     GLuint program = glCreateProgram();
     if (program == 0) {
@@ -121,24 +115,26 @@ GLuint createProgram(const char *vertexShaderSrc, const char *fragmentShaderSrc)
 
     glUseProgram(program);
 
-    return program;
+    return static_cast<uint>(program);
 }
 
-void configureCamera(GLuint program, const mat& mvp) {
+void deleteProgram(uint program) {
+    glDeleteProgram(static_cast<GLuint>(program));
+}
+
+void configureCamera(uint program, const float* mvp, bool row_major) {
     // Pass the final MVP matrix to the shader
-    GLint mvpLocation = glGetUniformLocation(program, "uMVP");
+    GLint mvpLocation = glGetUniformLocation(static_cast<GLuint>(program), "uMVP");
     if (mvpLocation != -1) {
         glUniformMatrix4fv(mvpLocation, 1,
-                           mvp.row_major() ? GL_TRUE : GL_FALSE,
-                           mvp.data());
+                           row_major ? GL_TRUE : GL_FALSE,
+                           mvp);
     }
 }
 
-GLuint loadTexture(unsigned char* raw_data, int raw_data_len) {
-    int width, height, channels;
-    unsigned char *data = stbi_load_from_memory(raw_data, raw_data_len, &width, &height, &channels, 0);
-    if (!data) {
-        LOG_ERROR("Failed to load texture image");
+uint loadTexture(int width, int height, int channels, unsigned char* data) {
+    if (data == nullptr) {
+        LOG_ERROR("No texture data provided");
         return 0;
     }
 
@@ -152,8 +148,7 @@ GLuint loadTexture(unsigned char* raw_data, int raw_data_len) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    stbi_image_free(data);
-    return texture;
+    return static_cast<uint>(texture);
 }
 
 void startNewRender() {
@@ -170,51 +165,57 @@ void startNewRender() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void renderModelUsingProgram(GLuint program,
-                             const std::vector<GLfloat>& vertices,
-                             const std::vector<GLfloat>& normals,
-                             const std::vector<GLfloat>& texcoords,
-                             GLuint texture) {
+void renderModelUsingProgram(uint program,
+                             const std::vector<float>& vertices,
+                             const std::vector<float>& normals,
+                             const std::vector<float>& texcoords,
+                             uint texture) {
     if (program == 0) return;
 
+    const auto gpu_program = static_cast<GLuint>(program);
+    const auto gpu_texture = static_cast<GLuint>(texture);
+
     // Use the shader program
-    glUseProgram(program);
+    glUseProgram(gpu_program);
 
     // Determine if we are using a texture
-    GLint useTextureHandle = glGetUniformLocation(program, "uUseTexture");
+    GLint useTextureHandle = glGetUniformLocation(gpu_program, "uUseTexture");
     if (useTextureHandle != -1) {
-        glUniform1i(useTextureHandle, texture != 0 ? 1 : 0);
+        glUniform1i(useTextureHandle, gpu_texture != 0 ? 1 : 0);
     }
 
     // Bind the texture
-    if (texture != 0) {
+    if (gpu_texture != 0) {
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        GLint textureHandle = glGetUniformLocation(program, "uTexture");
+        glBindTexture(GL_TEXTURE_2D, gpu_texture);
+        GLint textureHandle = glGetUniformLocation(gpu_program, "uTexture");
         if (textureHandle != -1) {
             glUniform1i(textureHandle, 0);  // GL_TEXTURE0 corresponds to 0
         }
     }
 
     // Pass in vertex position data
-    GLuint positionHandle = glGetAttribLocation(program, "aPosition");
+    GLuint positionHandle = glGetAttribLocation(gpu_program, "aPosition");
     if (positionHandle != -1) {
         glEnableVertexAttribArray(positionHandle);
-        glVertexAttribPointer(positionHandle, 3, GL_FLOAT, GL_FALSE, 0, vertices.data());
+        glVertexAttribPointer(positionHandle, 3, GL_FLOAT, GL_FALSE,
+                              0, static_cast<const GLfloat*>(vertices.data()));
     }
 
     // Pass in normal data, if available
-    GLuint normalHandle = glGetAttribLocation(program, "aNormal");
+    GLuint normalHandle = glGetAttribLocation(gpu_program, "aNormal");
     if (normalHandle != -1 && !normals.empty()) {
         glEnableVertexAttribArray(normalHandle);
-        glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0, normals.data());
+        glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE,
+                              0, static_cast<const GLfloat*>(normals.data()));
     }
 
     // Pass in texture coordinate data, if available
-    GLuint texCoordHandle = glGetAttribLocation(program, "aTexCoord");
+    GLuint texCoordHandle = glGetAttribLocation(gpu_program, "aTexCoord");
     if (texCoordHandle != -1 && !texcoords.empty()) {
         glEnableVertexAttribArray(texCoordHandle);
-        glVertexAttribPointer(texCoordHandle, 2, GL_FLOAT, GL_FALSE, 0, texcoords.data());
+        glVertexAttribPointer(texCoordHandle, 2, GL_FLOAT, GL_FALSE,
+                              0, static_cast<const GLfloat*>(texcoords.data()));
     }
 
     // Draw the model using GL_TRIANGLES (assuming your model is composed of triangles)
@@ -231,7 +232,7 @@ void renderModelUsingProgram(GLuint program,
         glDisableVertexAttribArray(texCoordHandle);
     }
 
-    if (texture != 0) {
+    if (gpu_texture != 0) {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 }

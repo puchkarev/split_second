@@ -5,29 +5,18 @@
 #ifndef SPLIT_SECOND_GRAPHICS_GL_ASSIST_H
 #define SPLIT_SECOND_GRAPHICS_GL_ASSIST_H
 
-#include <EGL/egl.h>
-#include <GLES2/gl2.h>
 #include <vector>
 
-#include "../geometry/mat.h"
-
-namespace shaders {
-
-const char* getVertexShaderSource();
-const char* getFragmentShaderSource();
-
-}  // shaders
-
-GLuint loadShader(GLenum type, const char *shaderSrc);
-GLuint loadTexture(unsigned char* data, int raw_data_len);
-GLuint createProgram(const char *vertexShaderSrc = nullptr, const char *fragmentShaderSrc = nullptr);
+uint createProgram();
+void deleteProgram(uint program);
+uint loadTexture(int width, int height, int channels, unsigned char* data);
 
 void startNewRender();
-void configureCamera(GLuint program, const mat& mvp);
-void renderModelUsingProgram(GLuint program,
-                             const std::vector<GLfloat>& vertices,
-                             const std::vector<GLfloat>& normals,
-                             const std::vector<GLfloat>& texcoords,
-                             GLuint texture);
+void configureCamera(uint program, const float* mvp, bool row_major);
+void renderModelUsingProgram(uint program,
+                             const std::vector<float>& vertices,
+                             const std::vector<float>& normals,
+                             const std::vector<float>& texcoords,
+                             uint texture);
 
 #endif //SPLIT_SECOND_GRAPHICS_GL_ASSIST_H
