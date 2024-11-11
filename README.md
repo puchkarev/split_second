@@ -38,7 +38,7 @@ have to retry this level.
 
 # Google Play Store
 
-The game is currently published [here][(https://play.google.com/store/apps/details?id=com.puchkarev.split_second).
+The game is currently published [here](https://play.google.com/store/apps/details?id=com.puchkarev.split_second).
 
 ## Testing
 
