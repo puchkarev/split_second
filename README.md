@@ -2,7 +2,7 @@ An android game about a time traveler
 
 # Setting up the environment.
 
-1. Install AndroidStudio [https://developer.android.com/studio/install]
+1. Install AndroidStudio [from here](https://developer.android.com/studio/install)
 
 2. Clone the repository
 
@@ -38,20 +38,20 @@ have to retry this level.
 
 # Google Play Store
 
-The game is currently published (here)[https://play.google.com/store/apps/details?id=com.puchkarev.split_second]
+The game is currently published [here][(https://play.google.com/store/apps/details?id=com.puchkarev.split_second).
 
 ## Testing
 
 ### Internal Testers
 
 To join the Internal Testers:
-Follow this (link)[https://play.google.com/apps/internaltest/4701096607627280823]
+Follow this [link](https://play.google.com/apps/internaltest/4701096607627280823)
 
 ### Closed Testers
 
 To join the Closed Testers:
-On Android follow this (link)[https://play.google.com/store/apps/details?id=com.puchkarev.split_second]
-On Web follow this (link)[https://play.google.com/apps/testing/com.puchkarev.split_second]
+On Android follow this [link](https://play.google.com/store/apps/details?id=com.puchkarev.split_second)
+On Web follow this [link](https://play.google.com/apps/testing/com.puchkarev.split_second)
 
 ### Open Testers
 
