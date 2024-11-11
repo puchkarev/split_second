@@ -25,7 +25,7 @@ It will update/import the Gradle Files. First time this take a while.
 
 # Game description
 
-This is going to be a 2d side scroller where you are traveling on a road with obstacles with some bushes oncoming cars and cars traveling the same direction.
+This is a 2d side scroller where you are traveling on a road with obstacles with some bushes oncoming cars and cars traveling the same direction.
 The controls that you will have are just the ability to move left or right, and ability to drive faster or slower.
 The goal is to complete as many stages as possible as quickly as possible.
 
