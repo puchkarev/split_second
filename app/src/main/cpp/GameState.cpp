@@ -1,14 +1,14 @@
 //
-// Created by ittec on 11/4/2024.
+// Created by Victor Puchkarev on 11/4/2024.
 //
 
 #include <GLES2/gl2.h>
 
 #include "GameState.h"
-#include "model.h"
+#include "graphics/model.h"
 #include "Player.h"
-#include "project_time.h"
-#include "log.h"
+#include "util/project_time.h"
+#include "util/log.h"
 
 constexpr float roadWidth = 4.0f;
 constexpr float roadLength = 20.0f;
@@ -61,7 +61,6 @@ void GameState::render() {
             vec3d(0.0, 1.0, 0.0),
             10.0f, 1.0f, 1000.0f, 0.5f);
 
-    // renderer_->render(Model::Axis(0, 0, 0));
     player_.render(*renderer_);
     road_.render(*renderer_);
 }

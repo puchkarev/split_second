@@ -1,12 +1,14 @@
 //
-// Created by ittec on 11/4/2024.
+// Created by Victor Puchkarev on 11/4/2024.
 //
 #include "Player.h"
 
-#include "log.h"
-#include "model.h"
-#include "gl_assist.h"
-#include "renderer.h"
+#include "util/log.h"
+#include "geometry/vec2d.h"
+#include "graphics/model.h"
+#include "graphics/gl_assist.h"
+#include "graphics/renderer.h"
+#include "Models.h"
 
 Player::Player(float x, float y) {
     x_ = x;
@@ -23,7 +25,7 @@ void Player::update(float /*dt*/, float /*speed*/) {
 }
 
 void Player::render(renderer& r) const {
-    r.render(Model::PlayerModel(x_, y_, 0.1));
+    r.render(Models::PlayerModel(x_, y_, 0.1));
 }
 
 vec2d Player::pos() const {

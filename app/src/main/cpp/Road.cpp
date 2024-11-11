@@ -1,16 +1,20 @@
 //
-// Created by puchkarev on 11/7/24.
+// Created by Victor Puchkarev on 11/7/24.
 //
 
 #include "Road.h"
 
-#include "log.h"
+#include "util/log.h"
+#include "graphics/renderer.h"
+#include "graphics/model.h"
+#include "geometry/box2d.h"
+#include "Models.h"
 
 constexpr float kRoadZ = 0.0f;
 
 Road::Road(float size_x, float size_y, float x_offset, float y_offset) :
     x_position_(x_offset), y_position_(y_offset) {
-    const Model block = Model::BackgroundBlock(0.0, 0.0, 0.0, BLOCK_ROAD);
+    const Model block = Models::BackgroundBlock(0.0, 0.0, 0.0, Models::BLOCK_ROAD);
     block_size_x_ = block.SizeX();
     block_size_y_ = block.SizeY();
 
@@ -20,9 +24,9 @@ Road::Road(float size_x, float size_y, float x_offset, float y_offset) :
         blocks_.emplace_back();
         for (int x = 0; x < blocks_x; ++x) {
             blocks_.back().emplace_back(
-                    x == 0 ? BLOCK_LEFT_EDGE :
-                    x + 1 == blocks_x ? BLOCK_RIGHT_EDGE :
-                    BLOCK_ROAD);
+                    x == 0 ? Models::BLOCK_LEFT_EDGE :
+                    x + 1 == blocks_x ? Models::BLOCK_RIGHT_EDGE :
+                    Models::BLOCK_ROAD);
         }
     }
 
@@ -54,7 +58,7 @@ void Road::render(renderer& r) const {
         const float y = start_y + static_cast<float>(by) * block_size_y_;
         for (int bx = 0; bx < count_x; ++bx) {
             const float x = start_x + static_cast<float>(bx) * block_size_x_ + x_position_;
-            r.render(Model::BackgroundBlock(x, y, kRoadZ, blocks_[by][bx]));
+            r.render(Models::BackgroundBlock(x, y, kRoadZ, blocks_[by][bx]));
         }
     }
 }

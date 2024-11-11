@@ -1,10 +1,11 @@
 //
-// Created by puchkarev on 11/7/24.
+// Created by Victor Puchkarev on 11/7/24.
 //
 
 #include "vec2d.h"
 
 #import <math.h>
+#import <string>
 
 vec2d::vec2d() : vec2d(0.0f, 0.0f) {}
 

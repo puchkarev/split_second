@@ -1,9 +1,9 @@
 //
-// Created by puchkarev on 11/7/24.
+// Created by Victor Puchkarev on 11/7/24.
 //
 
-#ifndef SPLIT_SECOND_VEC2D_H
-#define SPLIT_SECOND_VEC2D_H
+#ifndef SPLIT_SECOND_GEOMETRY_VEC2D_H
+#define SPLIT_SECOND_GEOMETRY_VEC2D_H
 
 #import <math.h>
 #import <string>
@@ -45,4 +45,4 @@ private:
     float y_ = 0.0f;
 };
 
-#endif //SPLIT_SECOND_VEC2D_H
+#endif //SPLIT_SECOND_GEOMETRY_VEC2D_H

@@ -1,5 +1,5 @@
 //
-// Created by ittec on 11/4/2024.
+// Created by Victor Puchkarev on 11/4/2024.
 //
 
 #ifndef SPLIT_SECOND_PLAYER_H
@@ -7,9 +7,8 @@
 
 #include <vector>
 
-#include "renderer.h"
-#include "box2d.h"
-#include "vec2d.h"
+#include "graphics/renderer.h"
+#include "geometry/vec2d.h"
 
 // Represents the player model.
 class Player {

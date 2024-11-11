@@ -1,10 +1,13 @@
 //
-// Created by puchkarev on 11/7/24.
+// Created by Victor Puchkarev on 11/7/24.
 //
 
 #include "vec3d.h"
 
 #import <math.h>
+#import <string>
+
+#import "vec2d.h"
 
 vec3d::vec3d() : vec3d(0.0f, 0.0f, 0.0f) {}
 

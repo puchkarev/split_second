@@ -1,15 +1,15 @@
 //
-// Created by ittec on 11/4/2024.
+// Created by Victor Puchkarev on 11/4/2024.
 //
 
-#ifndef SPLIT_SECOND_RENDERER_H
-#define SPLIT_SECOND_RENDERER_H
+#ifndef SPLIT_SECOND_GRAPHICS_RENDERER_H
+#define SPLIT_SECOND_GRAPHICS_RENDERER_H
 
 #include <android/asset_manager.h>
 #include <map>
 
-#include "vec3d.h"
-#include "box2d.h"
+#include "../geometry/vec3d.h"
+#include "../geometry/box2d.h"
 #include "model.h"
 
 class renderer {
@@ -31,4 +31,4 @@ private:
 };
 
 
-#endif //SPLIT_SECOND_RENDERER_H
+#endif //SPLIT_SECOND_GRAPHICS_RENDERER_H

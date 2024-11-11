@@ -1,5 +1,5 @@
 //
-// Created by ittec on 11/4/2024.
+// Created by Victor Puchkarev on 11/4/2024.
 //
 
 #include "renderer.h"
@@ -9,7 +9,7 @@
 
 #include "gl_assist.h"
 #include "model.h"
-#include "log.h"
+#include "../util/log.h"
 
 unsigned char* read_file(AAssetManager *asset_manager, const char* filePath, int *len) {
     if (asset_manager == nullptr) {

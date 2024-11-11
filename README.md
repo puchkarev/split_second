@@ -13,7 +13,7 @@ git clone git@github.com:puchkarev/split_second
 3. Import the submodules
 
 ```
-cd split_second/thid_party/stb
+cd split_second
 git submodule init
 git submodule update
 ```

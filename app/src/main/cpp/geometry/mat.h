@@ -1,9 +1,9 @@
 //
-// Created by puchkarev on 11/7/24.
+// Created by Victor Puchkarev on 11/7/24.
 //
 
-#ifndef SPLIT_SECOND_MAT_H
-#define SPLIT_SECOND_MAT_H
+#ifndef SPLIT_SECOND_GEOMETRY_MAT_H
+#define SPLIT_SECOND_GEOMETRY_MAT_H
 
 #include <vector>
 #include <functional>
@@ -90,4 +90,4 @@ std::string to_string(const mat& m);   // NOLINT(*-dcl58-cpp)
 
 }  // namespace std
 
-#endif //SPLIT_SECOND_MAT_H
+#endif //SPLIT_SECOND_GEOMETRY_MAT_H

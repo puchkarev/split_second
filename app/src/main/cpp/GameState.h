@@ -1,5 +1,5 @@
 //
-// Created by ittec on 11/4/2024.
+// Created by Victor Puchkarev on 11/4/2024.
 //
 
 #ifndef SPLIT_SECOND_GAMESTATE_H
@@ -7,7 +7,7 @@
 
 #include "Player.h"
 #include "Road.h"
-#include "renderer.h"
+#include "graphics/renderer.h"
 
 class GameState {
 public:

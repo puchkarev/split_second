@@ -1,5 +1,5 @@
 //
-// Created by ittec on 11/4/2024.
+// Created by Victor Puchkarev on 11/4/2024.
 //
 
 #include <GLES2/gl2.h>
@@ -12,9 +12,9 @@
 #endif  // STB_IMAGE_IMPLEMENTATION
 
 #include "gl_assist.h"
-#include "log.h"
-#include "vec3d.h"
-#include "mat.h"
+#include "../util/log.h"
+#include "../geometry/vec3d.h"
+#include "../geometry/mat.h"
 
 namespace shaders {
 namespace {

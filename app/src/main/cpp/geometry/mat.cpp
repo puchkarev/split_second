@@ -1,11 +1,11 @@
 //
-// Created by puchkarev on 11/7/24.
+// Created by Victor Puchkarev on 11/7/24.
 //
 
 #include "mat.h"
 
-#include <cassert>
-#include "log.h"
+#include "../util/log.h"
+#include "../util/assert.h"
 
 // Constructors
 mat::mat(): mat(0, 0, {}) {}
@@ -65,8 +65,8 @@ mat mat::rotate_z_yaw(float rad) {
 // Data accessors
 int mat::index(int row, int col) const {
     assert_verify();
-    assert(row >= 0 && row < rows_);
-    assert(col >= 0 && col < cols_);
+    ASSERT_TRUE(row >= 0 && row < rows_);
+    ASSERT_TRUE(col >= 0 && col < cols_);
 
     return row * cols_ + col;
 }
@@ -85,7 +85,7 @@ float& mat::operator()(int row, int col) {
 
 const float* mat::data() const {
     assert_verify();
-    assert(!empty());
+    ASSERT_TRUE(!empty());
 
     return data_.data();
 }
@@ -117,7 +117,7 @@ bool mat::is_identity() const {
 
 // Perform an operation on every element of the mat.
 void mat::operate(const std::function<void(int row, int col, float& v)>& op) {
-    assert(op != nullptr);
+    ASSERT_TRUE(op != nullptr);
 
     for (int row = 0; row < rows_; ++row) {
         for (int col = 0; col < cols_; ++col) {
@@ -127,7 +127,7 @@ void mat::operate(const std::function<void(int row, int col, float& v)>& op) {
 }
 
 void mat::operate(const std::function<void(int row, int col, float v)>& op) const {
-    assert(op != nullptr);
+    ASSERT_TRUE(op != nullptr);
 
     for (int row = 0; row < rows_; ++row) {
         for (int col = 0; col < cols_; ++col) {
@@ -137,7 +137,7 @@ void mat::operate(const std::function<void(int row, int col, float v)>& op) cons
 }
 
 mat mat::operated(const std::function<void(int row, int col, float& v)>& op) const {
-    assert(op != nullptr);
+    ASSERT_TRUE(op != nullptr);
 
     mat res = *this;
     res.operate(op);
@@ -176,7 +176,7 @@ void mat::operator*=(const float scalar) {
     this->operate([scalar](int row, int col, float& v){ v *= scalar; });
 }
 void mat::operator/=(const float scalar) {
-    assert(scalar != 0.0f);
+    ASSERT_TRUE(scalar != 0.0f);
 
     this->operator*=(1.0f / scalar);
 }
@@ -195,7 +195,7 @@ mat mat::operator-(const mat& other) const {
 }
 
 mat mat::operator*(const mat& other) const {
-    assert(cols_ == other.rows_);
+    ASSERT_TRUE(cols_ == other.rows_);
     if (empty() || other.empty()) return {};
 
     mat res(this->rows_, other.cols_,
@@ -210,8 +210,8 @@ mat mat::operator*(const mat& other) const {
 }
 
 void mat::operator+=(const mat& other) {
-    assert(rows_ == other.rows_);
-    assert(cols_ == other.cols_);
+    ASSERT_TRUE(rows_ == other.rows_);
+    ASSERT_TRUE(cols_ == other.cols_);
 
     this->operate([&other](int row, int col, float& v) { v += other(row, col); });
 }
@@ -291,7 +291,6 @@ namespace std {
 std::string to_string(const mat& m) { return m.DebugString(); } // NOLINT(*-dcl58-cpp)
 
 }  // namespace std
-
 
 void mat::test() {
     LOG_INFO("Testing zero");

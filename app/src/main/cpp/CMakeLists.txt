@@ -31,16 +31,17 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         # List C/C++ source files with relative paths to this CMakeLists.txt.
         native-lib.cpp
         GameState.cpp
+        Models.cpp
         Player.cpp
-        gl_assist.cpp
-        project_time.cpp
-        renderer.cpp
-        model.cpp
         Road.cpp
-        box2d.cpp
-        vec2d.cpp
-        vec3d.cpp
-        mat.cpp
+        graphics/gl_assist.cpp
+        util/project_time.cpp
+        graphics/renderer.cpp
+        graphics/model.cpp
+        geometry/box2d.cpp
+        geometry/vec2d.cpp
+        geometry/vec3d.cpp
+        geometry/mat.cpp
 )
 
 # Needed for decoding texture images.

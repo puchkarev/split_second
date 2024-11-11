@@ -1,13 +1,14 @@
 //
-// Created by puchkarev on 11/7/24.
+// Created by Victor Puchkarev on 11/7/24.
 //
 
 #ifndef SPLIT_SECOND_ROAD_H
 #define SPLIT_SECOND_ROAD_H
 
-#include "renderer.h"
-#include "model.h"
-#include "box2d.h"
+#include "graphics/renderer.h"
+#include "graphics/model.h"
+#include "geometry/box2d.h"
+#include "Models.h"
 
 class Road {
 public:
@@ -25,7 +26,7 @@ private:
     float block_size_x_ = 0.0f;
     float block_size_y_ = 0.0f;
 
-    std::vector<std::vector<BlockType>> blocks_;
+    std::vector<std::vector<Models::BlockType>> blocks_;
 
 };
 
