@@ -24,7 +24,7 @@ unsigned char* read_file(AAssetManager *asset_manager, const char* filePath, int
     }
 
     off_t assetLength = AAsset_getLength(asset);
-    unsigned char *data = (unsigned char *)malloc(assetLength);
+    auto *data = (unsigned char *)malloc(assetLength);
     AAsset_read(asset, data, assetLength);
     AAsset_close(asset);
     *len = assetLength;
@@ -56,12 +56,14 @@ int renderer::load_texture(const std::string& asset_path) {
     return tex_id;
 }
 
-void renderer::configure_camera(float cam_x, float cam_y, float cam_z,
+void renderer::configure_camera(vec3d camera_position, vec3d camera_target, vec3d camera_up,
                                 float fov_deg, float near_plane, float far_plane,
                                 float aspect_ratio) const {
     if (program_ == 0) return;
-    configureCamera(static_cast<GLuint>(program_), cam_x, cam_y, cam_z,
-                    fov_deg, near_plane, far_plane, aspect_ratio);
+    configureCamera(static_cast<GLuint>(program_),
+                    camera_position, camera_target, camera_up,
+                    fov_deg, near_plane, far_plane,
+                    aspect_ratio);
 }
 
 void renderer::start_new_render() const {
@@ -76,4 +78,3 @@ void renderer::render(const Model& model) {
     renderModelUsingProgram(static_cast<GLuint>(program_), model,
                             static_cast<GLuint>(texture));
 }
-

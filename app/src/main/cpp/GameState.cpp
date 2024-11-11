@@ -10,36 +10,39 @@
 #include "project_time.h"
 #include "log.h"
 
-constexpr float roadWidth = 2.0f;
+constexpr float roadWidth = 4.0f;
 constexpr float roadLength = 20.0f;
-constexpr float speed = 1.0f;
-constexpr float playerStartY = -1.5f;
-constexpr float kEndOffset = 0.2f;
+
+constexpr float playerStartOffset = 0.2f;
+constexpr float gameEndOffset = 0.3f;
+
+constexpr float speed = 0.5f;
+
+constexpr float cameraPlayerOffset = 0.6f;
 
 GameState::GameState(std::unique_ptr<renderer> renderer) :
     renderer_(std::move(renderer)) {
     LOG_INFO("Starting Game");
-    renderer_->configure_camera(0.0, 0.0, -20.0f,
-                               45.0f, 0.1f, 30.0f,
-                               0.5f);
     last_update_ = getCurrentTimeSeconds();
     StartGame();
 }
 
 void GameState::StartGame() {
-    player_ = Player(0.0f, playerStartY),
-    road_ = Road(roadWidth, roadLength, -roadLength * 0.5f + 1.5f);
+    road_ = Road(roadWidth, roadLength, 0.0, roadLength * 0.5f);
+    player_ = Player(0.0f, playerStartOffset);
 }
 
 void GameState::click(float x, float y) {
-    player_.move(x, playerStartY);
+    player_.move(x, player_.pos().y());
 }
 
 void GameState::update(float dt) {
     road_.update(dt, speed);
-    player_.update(dt);
+    player_.update(dt, speed);
 
-    if (player_.pos().y() >= road_.box().top() - kEndOffset) {
+    player_.move(player_.pos().x(), player_.pos().y() + dt * speed);
+
+    if (player_.pos().y() >= road_.box().top() - gameEndOffset) {
         StartGame();
     }
 }
@@ -51,6 +54,14 @@ void GameState::render() {
     last_update_ = now;
 
     renderer_->start_new_render();
-    road_.render(*renderer_);
+
+    renderer_->configure_camera(
+            vec3d(0.0, player_.pos().y() + cameraPlayerOffset, 20.0f),
+            vec3d(0.0, player_.pos().y() + cameraPlayerOffset, 0.0f),
+            vec3d(0.0, 1.0, 0.0),
+            10.0f, 1.0f, 1000.0f, 0.5f);
+
+    // renderer_->render(Model::Axis(0, 0, 0));
     player_.render(*renderer_);
+    road_.render(*renderer_);
 }

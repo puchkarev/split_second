@@ -17,15 +17,15 @@ public:
     Player() : Player(0.0f, 0.0f) {}
     Player(float x, float y);
 
-    vec2d pos() const;
+    [[nodiscard]] vec2d pos() const;
 
     void move(float x, float y);
-    void update(float dt);
+    void update(float dt, float speed);
     void render(renderer& r) const;
 
 private:
-    float x_;
-    float y_;
+    float x_ = 0.0f;
+    float y_ = 0.0f;
 };
 
 #endif //SPLIT_SECOND_PLAYER_H

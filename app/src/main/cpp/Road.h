@@ -11,14 +11,16 @@
 
 class Road {
 public:
-    Road() : Road(0.0, 0.0, 0.0) {}
-    Road(float size_x, float size_y, float y_offset);
+    Road() : Road(0.0, 0.0, 0.0, 0.0) {}
+    Road(float size_x, float size_y, float x_offset, float y_offset);
 
     [[nodiscard]] box2d box() const;
 
     void update(float dt, float speed);
     void render(renderer& r) const;
+
 private:
+    float x_position_ = 0.0f;
     float y_position_ = 0.0f;
     float block_size_x_ = 0.0f;
     float block_size_y_ = 0.0f;

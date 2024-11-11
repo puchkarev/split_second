@@ -5,36 +5,44 @@
 #ifndef SPLIT_SECOND_VEC2D_H
 #define SPLIT_SECOND_VEC2D_H
 
+#import <math.h>
+#import <string>
 
 class vec2d {
 public:
-    vec2d() : vec2d(0.0f, 0.0f) {}
-    vec2d(float x, float y) : x_(x), y_(y) {}
-    [[nodiscard]] float x() const { return x_; }
-    [[nodiscard]] float y() const { return x_; }
+    vec2d();
+    vec2d(float x, float y);
 
-    vec2d operator +(const vec2d& other) const {
-        return {x() + other.x(), y() + other.y()};
-    }
+    [[nodiscard]] float x() const;
+    [[nodiscard]] float y() const;
 
-    vec2d operator -(const vec2d other) const {
-        return {x() - other.x(), y() - other.y()};
-    }
+    [[nodiscard]] float len() const;
 
-    void operator += (const vec2d& other) {
-        x_ += other.x();
-        y_ += other.y();
-    }
+    [[nodiscard]] vec2d normalized() const;
+    void normalize();
 
-    void operator -= (const vec2d& other) {
-        x_ -= other.x();
-        y_ -= other.y();
-    }
+    [[nodiscard]]  vec2d operator +(const vec2d& other) const;
+    void operator +=(const vec2d& other);
+
+    [[nodiscard]]  vec2d operator -(const vec2d& other) const;
+    void operator -=(const vec2d& other);
+
+    [[nodiscard]]  vec2d operator *(float scalar) const;
+    void operator *=(float scalar);
+
+    [[nodiscard]] vec2d operator /(float scalar) const;
+    void operator /=(float scalar);
+
+    [[nodiscard]] bool operator ==(const vec2d& other) const;
+
+    [[nodiscard]] float cross_product(const vec2d& other) const;
+    [[nodiscard]] float dot_product(const vec2d& other) const;
+
+    [[nodiscard]] std::string DebugString() const;
 
 private:
-    float x_;
-    float y_;
+    float x_ = 0.0f;
+    float y_ = 0.0f;
 };
-
 
 #endif //SPLIT_SECOND_VEC2D_H

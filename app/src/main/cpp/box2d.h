@@ -12,22 +12,44 @@ public:
     box2d() : box2d(0.0, 0.0, 0.0, 0.0) {}
 
     box2d(float x, float y, float width, float height) :
-    x_(x), y_(y), width_(width), height_(height) {}
+        center_(x, y), half_size_(width * 0.5f, height * 0.5f) {}
+
+    [[nodiscard]] vec2d top_right() const {
+        return center_ + half_size_;
+    }
+
+    [[nodiscard]] vec2d bottom_left() const {
+        return center_ - half_size_;
+    }
 
     [[nodiscard]] float top() const {
-        return y_ + height_ * 0.5f;
+        return top_right().y();
     }
 
     [[nodiscard]]  float bottom() const {
-        return y_ - height_ * 0.5f;
+        return bottom_left().y();
     }
 
     [[nodiscard]] float left() const {
-        return x_ - width_ * 0.5f;
+        return bottom_left().x();
     }
 
     [[nodiscard]] float right() const {
-        return x_ + width_ * 0.5f;
+        return top_right().x();
+    }
+
+    [[nodiscard]] vec2d center() const {
+        return center_;
+    }
+
+    void shift(const vec2d& offset) {
+        center_ += offset;
+    }
+
+    box2d shifted(const vec2d& offset) {
+        box2d box = *this;
+        box.shift(offset);
+        return box;
     }
 
     [[nodiscard]] bool overlaps(const box2d& box) const {
@@ -41,10 +63,8 @@ public:
     }
 
 private:
-    float x_;
-    float y_;
-    float width_;
-    float height_;
+    vec2d center_;
+    vec2d half_size_;
 };
 
 

@@ -18,7 +18,9 @@ void Player::move(float x, float y) {
     y_ = y;
 }
 
-void Player::update(float /*dt*/) {}
+void Player::update(float /*dt*/, float /*speed*/) {
+    // TODO: Update the player model graphics as needed.
+}
 
 void Player::render(renderer& r) const {
     r.render(Model::PlayerModel(x_, y_, 0.1));

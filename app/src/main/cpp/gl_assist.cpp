@@ -13,6 +13,8 @@
 
 #include "gl_assist.h"
 #include "log.h"
+#include "vec3d.h"
+#include "mat.h"
 
 namespace shaders {
 namespace {
@@ -123,82 +125,93 @@ GLuint createProgram(const char *vertexShaderSrc, const char *fragmentShaderSrc)
     return program;
 }
 
-CameraBox getCameraBox(float fov_deg, float dist, float aspect_ratio) {
-    const float top = tan(fov_deg * 3.14159f / 360.0f) * dist;
-    return {
-        .bottom = -top,
-        .top = top,
-        .left = -top * aspect_ratio,
-        .right = top * aspect_ratio,
-    };
+box2d getCameraBox(float fov_deg, float dist, float aspect_ratio) {
+    const float height = tan(fov_deg * 3.14159f / 360.0f) * dist * 2.0f;
+    return {0.0, 0.0, height * aspect_ratio, height};
 }
 
-void configureCamera(GLuint program, float cam_x, float cam_y, float cam_z,
+mat getViewMatrix(vec3d eye, vec3d target, vec3d up) {
+    vec3d f = (target - eye).normalized();                // Forward
+    vec3d r = f.cross_product(up).normalized();     // Right
+    vec3d u = r.cross_product(f);                   // True Up
+
+    // LOG_INFO("f=%s r=%s u=%s", f.DebugString().c_str(), r.DebugString().c_str(), u.DebugString().c_str());
+
+    return mat(4, 4, {
+        r.x(), r.y(), r.z(), -r.dot_product(eye),
+        u.x(), u.y(), u.z(), -u.dot_product(eye),
+        -f.x(), -f.y(), -f.z(), f.dot_product(eye),
+        0.0, 0.0, 0.0, 1.0
+    });
+}
+
+mat getPerspectiveMatrix(float fov_deg, float aspect, float near, float far) {
+    const float fov_rad = fov_deg * 3.1415f / 180.0f;
+    const float tanHalfFov = tan(fov_rad / 2.0f);
+
+    return mat(4, 4, {
+            1.0f / (aspect * tanHalfFov), 0.0f, 0.0f, 0.0f,
+            0.0f, 1.0f / tanHalfFov, 0.0f, 0.0f,
+            0.0f, 0.0f, -(far + near) / (far - near), -1.0f,
+            0.0f, 0.0f, -(2.0f * far * near) / (far - near), 1.0f
+    });
+}
+
+mat getProjectionMatrix(float fov_deg, float aspect_ratio, float near_plane, float far_plane) {
+    // Projection matrix: defines the perspective projection
+    const box2d camera_box = getCameraBox(fov_deg, near_plane, aspect_ratio);
+    return mat(4, 4, {
+            (2 * near_plane) / (camera_box.right() - camera_box.left()), 0, 0, 0,
+            0, (2 * near_plane) / (camera_box.top() - camera_box.bottom()), 0, 0,
+            (camera_box.right() + camera_box.left()) / (camera_box.right() - camera_box.left()),
+            (camera_box.top() + camera_box.bottom()) / (camera_box.top() - camera_box.bottom()),
+            -(far_plane + near_plane) / (far_plane - near_plane), -1,
+            0, 0, -(2 * far_plane * near_plane) / (far_plane - near_plane), 1
+    });
+}
+
+mat getOrthographicMatrix(float left, float right, float bottom, float top, float near, float far) {
+    return mat(4, 4, {
+            2.0f / (right - left), 0.0f, 0.0f, -(right + left) / (right - left),
+            0.0f, 2.0f / (top - bottom), 0.0f, -(top + bottom) / (top - bottom),
+            0.0f, 0.0f, -2.0f / (far - near), -(far + near) / (far - near),
+            0.0f, 0.0f, 0.0f, 1.0f
+    });
+}
+
+void configureCamera(GLuint program,
+                     vec3d camera_position,
+                     vec3d camera_target,
+                     vec3d camera_up,
                      float fov_deg, float near_plane, float far_plane, float aspect_ratio) {
-    // Set up the camera matrices manually
-    // View matrix: positions the camera in the world space
-    // 4th column represents translation.
-    float view[16] = {
-            1, 0, 0, cam_x,
-            0, 1, 0, cam_y,
-            0, 0, 1, cam_z,
-            0, 0, 0, 1
-    };
+    // LOG_INFO("Camera position=%s target=%s up=%s",
+    //         camera_position.DebugString().c_str(),
+    //         camera_target.DebugString().c_str(),
+    //         camera_up.DebugString().c_str());
 
-    const CameraBox camera_box = getCameraBox(fov_deg, near_plane, aspect_ratio);
-
-    LOG_INFO("Camera config pos(%f, %f, %f) x=(%f %f) y=(%f %f)",
-             cam_x, cam_y, cam_z, camera_box.left, camera_box.right,
-             camera_box.bottom, camera_box.top);
+    // Create the view matrix using right, up, and forward vectors
+    const mat view = getViewMatrix(camera_position, camera_target, camera_up);
 
     // Projection matrix: defines the perspective projection
-    float projection[16] = {
-            (2 * near_plane) / (camera_box.right - camera_box.left), 0, 0, 0,
-            0, (2 * near_plane) / (camera_box.top - camera_box.bottom), 0, 0,
-            (camera_box.right + camera_box.left) / (camera_box.right - camera_box.left),
-            (camera_box.top + camera_box.bottom) / (camera_box.top - camera_box.bottom),
-            -(far_plane + near_plane) / (far_plane - near_plane), -1,
-            0, 0, -(2 * far_plane * near_plane) / (far_plane - near_plane),
-    };
+    const mat projection = getPerspectiveMatrix(fov_deg, aspect_ratio, near_plane, far_plane);
+    // const mat projection = getOrthographicMatrix(-5, 5, -10, 10, near_plane, far_plane);
 
     // Model matrix: defines the position and orientation of the model in the world space
-    float model[16] = {
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1
-    };
+    const mat model = mat::identity(4);
 
     // MVP matrix: Model-View-Projection matrix to combine transformations
-    float mvp[16];
-    for (int i = 0; i < 16; ++i) {
-        mvp[i] = 0;
-    }
-
     // Multiply projection, view, and model matrices to get the MVP matrix
-    for (int row = 0; row < 4; ++row) {
-        for (int col = 0; col < 4; ++col) {
-            for (int k = 0; k < 4; ++k) {
-                mvp[row * 4 + col] += projection[row * 4 + k] * view[k * 4 + col];
-            }
-        }
-    }
+    const mat mvp = projection * view * model;
 
-    // Final MVP matrix after combining all transformations
-    float finalMVP[16];
-    for (int row = 0; row < 4; ++row) {
-        for (int col = 0; col < 4; ++col) {
-            finalMVP[row * 4 + col] = 0;
-            for (int k = 0; k < 4; ++k) {
-                finalMVP[row * 4 + col] += mvp[row * 4 + k] * model[k * 4 + col];
-            }
-        }
-    }
+    // LOG_INFO("view\n%s", view.DebugString().c_str());
+    // LOG_INFO("projection\n%s", projection.DebugString().c_str());
+    // LOG_INFO("model\n%s", model.DebugString().c_str());
+    // LOG_INFO("mpv\n%s", mvp.DebugString().c_str());
 
     // Pass the final MVP matrix to the shader
-    GLuint mvpLocation = glGetUniformLocation(program, "uMVP");
+    GLint mvpLocation = glGetUniformLocation(program, "uMVP");
     if (mvpLocation != -1) {
-        glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, finalMVP);
+        glUniformMatrix4fv(mvpLocation, 1, GL_TRUE, mvp.data());
     }
 }
 

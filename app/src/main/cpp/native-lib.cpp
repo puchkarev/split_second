@@ -4,13 +4,21 @@
 
 #include "GameState.h"
 #include "renderer.h"
+#include "mat.h"
+#include "log.h"
 
 GameState* g_state_ = nullptr;
 
 AAssetManager *g_asset_manager_ = nullptr;
 
+void test() {
+    LOG_INFO("Testing mat");
+    mat::test();
+}
+
 extern "C" JNIEXPORT void JNICALL
 Java_com_puchkarev_split_1second_MainActivity_initGame(JNIEnv* /*env*/, jclass /*this*/) {
+    test();
     g_state_ = new GameState(std::make_unique<renderer>(g_asset_manager_));
 }
 

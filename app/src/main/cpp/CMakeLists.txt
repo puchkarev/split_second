@@ -11,6 +11,9 @@ cmake_minimum_required(VERSION 3.22.1)
 # build script scope).
 project("split_second")
 
+# Location of third party code.
+set(THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../../third_party)
+
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds them for you.
@@ -36,13 +39,12 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         Road.cpp
         box2d.cpp
         vec2d.cpp
+        vec3d.cpp
+        mat.cpp
 )
 
-message(STATUS "CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")
-message(STATUS "CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR}")
-
-# include_directories(${CMAKE_SOURCE_DIR}/../third_party/stb)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../../third_party/stb)
+# Needed for decoding texture images.
+include_directories(${THIRD_PARTY_DIR}/stb)
 
 # Locates the relevant libraries
 find_library(gles-lib GLESv2) # Add OpenGL ES 2.0

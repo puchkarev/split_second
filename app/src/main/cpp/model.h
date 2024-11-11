@@ -26,6 +26,7 @@ struct Model {
 
     static Model PlayerModel(float x, float y, float z);
     static Model BackgroundBlock(float x, float y, float z, BlockType type);
+    static Model Axis(float x, float y, float z);
 };
 
 #endif //SPLIT_SECOND_MODEL_H
