@@ -80,3 +80,26 @@ Some userful links for myself:
 ## Dependencies
 
 Currently depend on the [stb](https://github.com/nothings/stb) project for texture loading.
+
+## Deployment
+
+1. Make sure all the changes are checked into github.
+
+```git status```
+
+should return:
+
+```
+On branch master
+Your branch is up to date with 'origin/master'.
+
+nothing to commit, working tree clean
+```
+
+2. Build and verify that the game runs on simulator.
+3. Increment the version in build.gradle.kts (Module :app) versionCode and versionName
+4. Build Bundle In Android Studio: Build -> Generate Signed App Bundle or APK -> Android App Bundle -> key_store_path: split_second.jks, key_alias: key0 -> release
+5. Push the newly generated app/release/app-release.aab and version numbers to github from Android Studio: Git -> Commit -> Commit and Push... -> review and confirm with warnings
+6. Add a release in github with the proper version number tag
+7. Upload the new aab to Google Play Console and start internal testing on an android phone
+8. Once internal testing looks good promote it to Closed Testing.
