@@ -61,7 +61,7 @@ mat camera::view() const {
             u.x(), u.y(), u.z(), -u.dot_product(position_),
             -f.x(), -f.y(), -f.z(), f.dot_product(position_),
             0.0, 0.0, 0.0, 1.0
-    });
+    }, mat::ROW).of_type(mat::kDefMajorType);
 }
 
 mat camera::intrinsics() const {
@@ -82,7 +82,7 @@ mat camera::perspective_matrix(float fov_deg, float near, float far,
             0.0f, 1.0f / tanHalfFov, 0.0f, 0.0f,
             0.0f, 0.0f, -(far + near) / (far - near), -1.0f,
             0.0f, 0.0f, -(2.0f * far * near) / (far - near), 1.0f
-    });
+    }, mat::ROW).of_type(mat::kDefMajorType);
 }
 
 mat camera::orthographic_matrix(float left, float right, float bottom, float top,
@@ -92,5 +92,5 @@ mat camera::orthographic_matrix(float left, float right, float bottom, float top
             0.0f, 2.0f / (top - bottom), 0.0f, -(top + bottom) / (top - bottom),
             0.0f, 0.0f, -2.0f / (far - near), -(far + near) / (far - near),
             0.0f, 0.0f, 0.0f, 1.0f
-    });
+    }, mat::ROW).of_type(mat::kDefMajorType);
 }

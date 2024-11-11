@@ -13,19 +13,23 @@
 
 class mat {
 public:
+    enum Major { ROW, COL };
+
+    static const Major kDefMajorType = COL;
+
     // Constructors
     mat();
-    mat(int rows, int cols, std::vector<float> vals);
-    mat(int rows, int cols, float init);
+    mat(int rows, int cols, std::vector<float> vals, Major type);
+    mat(int rows, int cols, float init, Major type = kDefMajorType);
 
-    static mat zero(int rows, int cols);
-    static mat one(int rows, int cols);
-    static mat identity(int dim);
+    static mat zero(int rows, int cols, Major type = kDefMajorType);
+    static mat one(int rows, int cols, Major type = kDefMajorType);
+    static mat identity(int dim, Major type = kDefMajorType);
 
-    static mat translate(const vec3d& translation);
-    static mat rotate_x_roll(float rad);
-    static mat rotate_y_pitch(float rad);
-    static mat rotate_z_yaw(float rad);
+    static mat translate(const vec3d& translation, Major type = kDefMajorType);
+    static mat rotate_x_roll(float rad, Major type = kDefMajorType);
+    static mat rotate_y_pitch(float rad, Major type = kDefMajorType);
+    static mat rotate_z_yaw(float rad, Major type = kDefMajorType);
 
     // Data accessors
     [[nodiscard]] int index(int row, int col) const;
@@ -37,9 +41,14 @@ public:
     // Checkers
     [[nodiscard]] bool empty() const;
     [[nodiscard]] bool verify() const;
-    void assert_verify() const;
     [[nodiscard]] bool is_zero() const;
     [[nodiscard]] bool is_identity() const;
+
+    [[nodiscard]] Major type() const;
+    [[nodiscard]] bool row_major() const;
+    [[nodiscard]] bool col_major() const;
+    [[nodiscard]] int rows() const;
+    [[nodiscard]] int cols() const;
 
     // Perform an operation on every element of the mat.
     void operate(const std::function<void(int row, int col, float& v)>& op);
@@ -69,6 +78,8 @@ public:
     void transpose();
     [[nodiscard]] mat transposed() const;
 
+    [[nodiscard]] mat of_type(Major major) const;
+
     [[nodiscard]] bool operator==(const mat& other) const;
     [[nodiscard]] bool operator!=(const mat& other) const;
 
@@ -79,8 +90,8 @@ public:
     static void test();
 
 private:
+    bool row_major_ = true;
     int rows_;
-    int cols_;
     std::vector<float> data_;
 };
 

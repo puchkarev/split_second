@@ -128,7 +128,9 @@ void configureCamera(GLuint program, const mat& mvp) {
     // Pass the final MVP matrix to the shader
     GLint mvpLocation = glGetUniformLocation(program, "uMVP");
     if (mvpLocation != -1) {
-        glUniformMatrix4fv(mvpLocation, 1, GL_TRUE, mvp.data());
+        glUniformMatrix4fv(mvpLocation, 1,
+                           mvp.row_major() ? GL_TRUE : GL_FALSE,
+                           mvp.data());
     }
 }
 
