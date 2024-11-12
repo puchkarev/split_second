@@ -31,6 +31,8 @@ public:
     static mat rotate_y_pitch(float rad, Major type = kDefMajorType);
     static mat rotate_z_yaw(float rad, Major type = kDefMajorType);
 
+    static mat scale(float scale_x, float scale_y, float scale_z, Major type = kDefMajorType);
+
     // Data accessors
     [[nodiscard]] int index(int row, int col) const;
     [[nodiscard]] int size() const;

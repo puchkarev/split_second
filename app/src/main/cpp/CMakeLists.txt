@@ -41,6 +41,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         graphics/image.cpp
         graphics/model.cpp
         graphics/renderer.cpp
+        graphics/text.cpp
 
         geometry/box2d.cpp
         geometry/mat.cpp

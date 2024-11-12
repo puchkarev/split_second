@@ -47,7 +47,7 @@ const char *fragmentShaderSource = R"(
             gl_FragColor = vec4(textureColor.rgb, textureColor.a * uAlpha);
         } else {
             // Use the gradient if no texture is supplied
-            gl_FragColor = vec4(vTexCoord, 0.5, 1.0);
+            gl_FragColor = vec4(vTexCoord, 0.5, uAlpha);
         }
     }
 )";

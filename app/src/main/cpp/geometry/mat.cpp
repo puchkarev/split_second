@@ -68,6 +68,13 @@ mat mat::rotate_z_yaw(float rad, Major major) {
                       0, 0, 0, 1}, mat::ROW).of_type(major);
 }
 
+mat mat::scale(float scale_x, float scale_y, float scale_z, Major major) {
+    return mat(4, 4, {scale_x, 0, 0, 0,
+                      0, scale_y, 0, 0,
+                      0, 0, scale_z, 0,
+                      0, 0, 0, 1}, major);
+}
+
 // Data accessors
 int mat::index(int row, int col) const {
     ASSERT_TRUE(row >= 0 && row < rows());

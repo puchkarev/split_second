@@ -27,6 +27,7 @@ public:
     void start_game();
 
     void reconfigure_camera(int width, int height);
+    void draw_game_state(int width, int height);
 
 private:
     std::unique_ptr<renderer> renderer_;

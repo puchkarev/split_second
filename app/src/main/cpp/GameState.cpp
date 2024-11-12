@@ -10,6 +10,7 @@
 #include "graphics/model.h"
 #include "graphics/camera.h"
 #include "graphics/renderer.h"
+#include "graphics/text.h"
 
 #include "util/project_time.h"
 #include "util/log.h"
@@ -82,8 +83,35 @@ void GameState::render(int width, int height) {
         reconfigure_camera(width, height);
         renderer_->mutable_camera().reposition(
                 {0.0, player_.pos().y() + cameraPlayerOffset, cameraAboveRoad});
+
         renderer_->start_new_render();
         road_.render(*renderer_);
         player_.render(*renderer_);
+
+        draw_game_state(width, height);
     }
+}
+
+void GameState::draw_game_state(int width, int height) {
+    constexpr float kTextZ = 5.0;
+
+    const Model text_model = text::from_string("Split Second");
+    const Model text_background{
+        .vertices = text_model.vertices,
+        .texcoords = std::vector<float>(text_model.vertices.size(), 0.5),
+    };
+
+    const float scale_text = 0.2f;
+    const mat scale_text_mat = mat::scale(scale_text, scale_text, scale_text);
+    const float mid_offset_x = -text_model.SizeX() * 0.5f * scale_text;
+    const float offset_y = renderer_->mutable_camera().position().y() + 2.6f;
+
+    const mat background_transform =
+            mat::translate({mid_offset_x, offset_y, kTextZ}) * scale_text_mat;
+    const mat text_transform =
+            mat::translate({mid_offset_x, offset_y, kTextZ + 0.1}) * scale_text_mat;
+
+    // Give it some background.
+    renderer_->render(text_background,background_transform, 0.1);
+    renderer_->render(text_model, text_transform, 1.0);
 }
