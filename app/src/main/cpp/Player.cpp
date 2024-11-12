@@ -27,7 +27,7 @@ void Player::update(float /*dt*/, float /*speed*/) {
 
 void Player::render(renderer& r) const {
     r.render(Models::PlayerModel(),
-             mat::translate({x_, y_, 0.1}));
+             mat::translate({x_, y_, 0.1}), 0.5);
 }
 
 vec2d Player::pos() const {

@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         external fun render()
 
         @JvmStatic
-        external fun touchEvent(width: Int, height: Int, eventX: Float, eventY: Float)
+        external fun touchEvent(width: Int, height: Int, eventX: Float, eventY: Float, type: Int)
 
         @JvmStatic
         external fun nativeSetAssetManager(assetManager: AssetManager?)

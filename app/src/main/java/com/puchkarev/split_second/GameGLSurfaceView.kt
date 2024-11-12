@@ -35,8 +35,15 @@ class GameGLSurfaceView(context: Context) : GLSurfaceView(context) {
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_DOWN || event.action == MotionEvent.ACTION_MOVE) {
-            MainActivity.touchEvent(width, height, event.x, event.y)
+        if (event.action == MotionEvent.ACTION_DOWN || event.action == MotionEvent.ACTION_MOVE ||
+            event.action == MotionEvent.ACTION_UP) {
+            val actionType = when (event.action) {
+                MotionEvent.ACTION_DOWN -> 0
+                MotionEvent.ACTION_MOVE -> 1
+                MotionEvent.ACTION_UP -> 2
+                else -> -1
+            }
+            MainActivity.touchEvent(width, height, event.x, event.y, actionType)
         }
         performClick()
         return true

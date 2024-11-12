@@ -14,7 +14,13 @@ class GameState {
 public:
     explicit GameState(std::unique_ptr<renderer> renderer);
 
-    void click(float x, float y);
+    enum ClickType {
+        Click_DOWN = 0,
+        Click_MOVE = 1,
+        Click_UP = 2,
+    };
+
+    void click(float x, float y, ClickType type);
     void update(float dt);
     void render(int width, int height);
 

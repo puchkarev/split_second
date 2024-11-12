@@ -35,7 +35,7 @@ Java_com_puchkarev_split_1second_MainActivity_render(JNIEnv* /*env*/, jclass /*t
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_puchkarev_split_1second_MainActivity_touchEvent(JNIEnv* /*env*/, jclass /*this*/, int width, int height, float eventX, float eventY) {
+Java_com_puchkarev_split_1second_MainActivity_touchEvent(JNIEnv* /*env*/, jclass /*this*/, int width, int height, float eventX, float eventY, int type) {
     // Event coordinates are in pixels (just like width and length), with bottom left
     // bottom left: at x = 0, y = height
     // top right: x = width, y = 0
@@ -48,7 +48,7 @@ Java_com_puchkarev_split_1second_MainActivity_touchEvent(JNIEnv* /*env*/, jclass
     const float x = (eventX / static_cast<float>(width)) * 2.0f - 1.0f;
     const float y = (1.0f - eventY / static_cast<float>(height)) * 2.0f - 1.0f;
     if (g_state_ != nullptr) {
-        g_state_->click(x, y);
+        g_state_->click(x, y, static_cast<GameState::ClickType>(type));
     }
 }
 

@@ -17,6 +17,6 @@ void renderModelUsingProgram(uint program,
                              const std::vector<float>& vertices,
                              const std::vector<float>& normals,
                              const std::vector<float>& texcoords,
-                             uint texture);
+                             uint texture, float alpha);
 
 #endif //SPLIT_SECOND_GRAPHICS_GL_ASSIST_H

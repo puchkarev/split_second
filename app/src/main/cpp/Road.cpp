@@ -65,7 +65,7 @@ void Road::render(renderer& r) const {
         for (int bx = 0; bx < count_x; ++bx) {
             const float x = start_x + static_cast<float>(bx) * block_size_x_ + x_position_;
             r.render(Models::BackgroundBlock(blocks_[by][bx]),
-                     mat::translate({x, y, kRoadZ}));
+                     mat::translate({x, y, kRoadZ}), 1.0);
         }
     }
 }

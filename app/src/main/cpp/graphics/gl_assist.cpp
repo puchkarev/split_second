@@ -38,12 +38,13 @@ const char *fragmentShaderSource = R"(
 
     uniform sampler2D uTexture; // The texture sampler
     uniform bool uUseTexture;   // Flag to determine if a texture is available
+    uniform float uAlpha;       // Uniform to control transparency
 
     void main() {
         if (uUseTexture) {
             // Sample the texture using the texture coordinates
             vec4 textureColor = texture2D(uTexture, vTexCoord);
-            gl_FragColor = textureColor;
+            gl_FragColor = vec4(textureColor.rgb, textureColor.a * uAlpha);
         } else {
             // Use the gradient if no texture is supplied
             gl_FragColor = vec4(vTexCoord, 0.5, 1.0);
@@ -161,6 +162,10 @@ void startNewRender() {
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 
+    // Enable alpha channel blending
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     // Clear both color and depth buffers before drawing each frame
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
@@ -169,7 +174,8 @@ void renderModelUsingProgram(uint program,
                              const std::vector<float>& vertices,
                              const std::vector<float>& normals,
                              const std::vector<float>& texcoords,
-                             uint texture) {
+                             uint texture,
+                             const float alpha) {
     if (program == 0) return;
 
     const auto gpu_program = static_cast<GLuint>(program);
@@ -216,6 +222,12 @@ void renderModelUsingProgram(uint program,
         glEnableVertexAttribArray(texCoordHandle);
         glVertexAttribPointer(texCoordHandle, 2, GL_FLOAT, GL_FALSE,
                               0, static_cast<const GLfloat*>(texcoords.data()));
+    }
+
+    // Pass in the alpha value.
+    GLint alphaLocation = glGetUniformLocation(static_cast<GLuint>(program), "uAlpha");
+    if (alphaLocation != -1) {
+        glUniform1f(alphaLocation, alpha);
     }
 
     // Draw the model using GL_TRIANGLES (assuming your model is composed of triangles)

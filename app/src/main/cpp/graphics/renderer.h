@@ -20,7 +20,9 @@ public:
 
     camera& mutable_camera();
     void start_new_render() const;
-    void render(const Model& model, const mat& model_transform = mat::identity(4));
+    void render(const Model& model,
+                const mat& model_transform,
+                float alpha);
 
 private:
     uint load_texture(const std::string& asset_path);

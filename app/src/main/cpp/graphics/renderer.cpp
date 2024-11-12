@@ -72,7 +72,7 @@ void renderer::start_new_render() const {
     startNewRender();
 }
 
-void renderer::render(const Model& model, const mat& model_transform) {
+void renderer::render(const Model& model, const mat& model_transform, float alpha) {
     if (program_ == 0) return;
 
     const uint texture = model.texture.empty() ? 0 : load_texture(model.texture);
@@ -81,5 +81,6 @@ void renderer::render(const Model& model, const mat& model_transform) {
                     mvp.data(), mvp.row_major());
     const std::vector<float> normals =
             model.normals.empty() ? Model::ComputeNormals(model.vertices) : model.normals;
-    renderModelUsingProgram(program_, model.vertices, normals, model.texcoords, texture);
+    renderModelUsingProgram(program_, model.vertices, normals, model.texcoords,
+                            texture, alpha);
 }

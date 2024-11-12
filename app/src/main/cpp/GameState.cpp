@@ -34,7 +34,7 @@ void GameState::start_game() {
     player_ = Player(0.0f, 0.0f);
 }
 
-void GameState::click(float x, float y) {
+void GameState::click(float x, float y, ClickType type) {
     const float road_hw = road_.width() * 0.5f;
     const float desired_x = x * road_hw;
     const float clamped_x = fmax(-road_hw + road_.width_edge_offset(),
@@ -63,7 +63,7 @@ void GameState::reconfigure_camera(int width, int height) {
         // Compute so that we can accurately see the full width of the road.
         const float fov_y_deg = 2.0f
                 * atan((road_.width() / aspect_ratio) / (2.0f * cameraAboveRoad))
-                * (180.0f / M_PI);
+                * (180.0f / static_cast<float>(M_PI));
 
         renderer_->mutable_camera() =
                 camera(camera::perspective_matrix(fov_y_deg, 10.0f, 40.0f, aspect_ratio),
@@ -83,7 +83,7 @@ void GameState::render(int width, int height) {
         renderer_->mutable_camera().reposition(
                 {0.0, player_.pos().y() + cameraPlayerOffset, cameraAboveRoad});
         renderer_->start_new_render();
-        player_.render(*renderer_);
         road_.render(*renderer_);
+        player_.render(*renderer_);
     }
 }
