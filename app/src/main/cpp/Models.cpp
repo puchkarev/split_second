@@ -42,7 +42,7 @@ Model Models::PlayerModel() {
                     0.0f, 0.0f,   // Top left
                     0.0f, 1.0f,  // Bottom left
             },
-            .texture = "car_basic.jpg",
+            .texture = "car_basic.png",
     };
 }
 
