@@ -15,6 +15,9 @@ public:
     Road(float size_x, float size_y, float x_offset, float y_offset);
 
     [[nodiscard]] float length() const;
+    [[nodiscard]] float width() const;
+
+    [[nodiscard]] float width_edge_offset() const;
 
     void update(float dt, float speed);
     void render(renderer& r) const;

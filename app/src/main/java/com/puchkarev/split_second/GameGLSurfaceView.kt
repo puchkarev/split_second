@@ -4,6 +4,7 @@ import android.content.Context
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.view.MotionEvent
+import com.puchkarev.split_second.MainActivity.Companion.initGame
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -20,7 +21,7 @@ class GameGLSurfaceView(context: Context) : GLSurfaceView(context) {
 
     private class GameRenderer : Renderer {
         override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
-            MainActivity.initGame()
+            initGame()
         }
 
         override fun onDrawFrame(gl: GL10) {

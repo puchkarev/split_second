@@ -31,7 +31,7 @@ public:
     [[nodiscard]] mat mvp() const;
 
     // Intrinsics computations.
-    static mat perspective_matrix(float fov_deg, float near, float far,
+    static mat perspective_matrix(float fov_y_deg, float near, float far,
                                   float aspect_ratio);
     static mat orthographic_matrix(float left, float right, float bottom, float top,
                                    float near, float far);

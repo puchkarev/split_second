@@ -39,7 +39,15 @@ Road::Road(float size_x, float size_y, float x_offset, float y_offset) :
 }
 
 float Road::length() const {
-    return block_size_y_ * static_cast<float>(blocks_.size() - 1);
+    return block_size_y_ * static_cast<float>(blocks_.size());
+}
+
+float Road::width() const {
+    return block_size_x_ * static_cast<float>(blocks_.empty() ? 0 : blocks_.front().size());
+}
+
+float Road::width_edge_offset() const {
+    return block_size_x_ * 0.5f;
 }
 
 void Road::update(float /*dt*/, float /*speed*/) {

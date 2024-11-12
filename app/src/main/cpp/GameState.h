@@ -13,11 +13,14 @@
 class GameState {
 public:
     explicit GameState(std::unique_ptr<renderer> renderer);
+
     void click(float x, float y);
     void update(float dt);
-    void render();
+    void render(int width, int height);
 
-    void StartGame();
+    void start_game();
+
+    void reconfigure_camera(int width, int height);
 
 private:
     std::unique_ptr<renderer> renderer_;

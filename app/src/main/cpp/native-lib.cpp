@@ -11,6 +11,9 @@
 
 GameState* g_state_ = nullptr;
 
+int g_screen_width_ = 1080;
+int g_screen_height_ = 2400;
+
 AAssetManager *g_asset_manager_ = nullptr;
 
 void test() {
@@ -27,7 +30,7 @@ Java_com_puchkarev_split_1second_MainActivity_initGame(JNIEnv* /*env*/, jclass /
 extern "C" JNIEXPORT void JNICALL
 Java_com_puchkarev_split_1second_MainActivity_render(JNIEnv* /*env*/, jclass /*this*/) {
     if (g_state_ != nullptr) {
-        g_state_->render();
+        g_state_->render(g_screen_width_, g_screen_height_);
     }
 }
 
@@ -53,4 +56,12 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_puchkarev_split_1second_MainActivity_nativeSetAssetManager(JNIEnv *env, jclass /* this */, jobject assetManager) {
     g_asset_manager_ = AAssetManager_fromJava(env, assetManager);
+}
+
+// JNI function to set screen size
+extern "C" JNIEXPORT void JNICALL
+Java_com_puchkarev_split_1second_MainActivity_setScreenSize(JNIEnv* /*env*/, jclass /*this*/, jint width, jint height) {
+    g_screen_width_ = width;
+    g_screen_height_ = height;
+    LOG_INFO("Screen size changed to %d %d", width, height);
 }

@@ -75,16 +75,16 @@ mat camera::mvp() const {
     return intrinsics() * view();
 }
 
-mat camera::perspective_matrix(float fov_deg, float near, float far,
+mat camera::perspective_matrix(float fov_y_deg, float near, float far,
                                float aspect_ratio) {
-    const float fov_rad = fov_deg * 3.1415f / 180.0f;
+    const float fov_rad = fov_y_deg * 3.1415f / 180.0f;
     const float tanHalfFov = tan(fov_rad / 2.0f);
 
     return mat(4, 4, {
             1.0f / (aspect_ratio * tanHalfFov), 0.0f, 0.0f, 0.0f,
             0.0f, 1.0f / tanHalfFov, 0.0f, 0.0f,
-            0.0f, 0.0f, -(far + near) / (far - near), -1.0f,
-            0.0f, 0.0f, -(2.0f * far * near) / (far - near), 1.0f
+            0.0f, 0.0f, -(far + near) / (far - near), -(2.0f * far * near) / (far - near),
+            0.0f, 0.0f, -1.0f, 1.0f
     }, mat::ROW).of_type(mat::kDefMajorType);
 }
 
