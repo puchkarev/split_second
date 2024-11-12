@@ -4,6 +4,9 @@
 
 #include "camera.h"
 
+#include "../geometry/vec3d.h"
+#include "../geometry/mat.h"
+
 // Constructors
 camera::camera() = default;
 

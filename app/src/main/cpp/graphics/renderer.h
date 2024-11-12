@@ -8,8 +8,8 @@
 #include <android/asset_manager.h>
 #include <map>
 
-#include "model.h"
 #include "camera.h"
+#include "model.h"
 
 #include "../geometry/mat.h"
 

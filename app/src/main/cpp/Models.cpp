@@ -4,6 +4,8 @@
 
 #include "Models.h"
 
+#include "graphics/model.h"
+
 Model Models::PlayerModel() {
     return {
             .vertices = {

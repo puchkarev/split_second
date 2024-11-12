@@ -5,10 +5,9 @@
 #ifndef SPLIT_SECOND_PLAYER_H
 #define SPLIT_SECOND_PLAYER_H
 
-#include <vector>
+#include "geometry/vec2d.h"
 
 #include "graphics/renderer.h"
-#include "geometry/vec2d.h"
 
 // Represents the player model.
 class Player {

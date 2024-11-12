@@ -5,6 +5,7 @@
 #include "model.h"
 
 #include "../geometry/vec3d.h"
+
 #include "../util/assert.h"
 
 float Model::SizeX() const {

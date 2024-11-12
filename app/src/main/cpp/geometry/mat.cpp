@@ -4,6 +4,12 @@
 
 #include "mat.h"
 
+#include <vector>
+#include <functional>
+#include <string>
+
+#include "vec3d.h"
+
 #include "../util/log.h"
 #include "../util/assert.h"
 

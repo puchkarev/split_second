@@ -8,8 +8,6 @@
 #include "Models.h"
 
 #include "graphics/renderer.h"
-#include "graphics/model.h"
-#include "geometry/box2d.h"
 
 class Road {
 public:

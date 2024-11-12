@@ -8,9 +8,7 @@
 
 #include "geometry/vec2d.h"
 #include "geometry/mat.h"
-#include "graphics/model.h"
 
-#include "graphics/gl_assist.h"
 #include "graphics/renderer.h"
 
 Player::Player(float x, float y) {

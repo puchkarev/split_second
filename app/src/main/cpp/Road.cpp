@@ -7,8 +7,6 @@
 #include "Models.h"
 
 #include "graphics/renderer.h"
-#include "graphics/model.h"
-#include "geometry/box2d.h"
 
 #include "util/log.h"
 #include "util/assert.h"

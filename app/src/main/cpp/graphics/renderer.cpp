@@ -4,9 +4,15 @@
 
 #include "renderer.h"
 
+#include <android/asset_manager.h>
+#include <map>
+
+#include "camera.h"
 #include "gl_assist.h"
 #include "image.h"
 #include "model.h"
+
+#include "../geometry/mat.h"
 
 #include "../util/log.h"
 
