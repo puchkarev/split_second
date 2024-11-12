@@ -17,9 +17,9 @@
 constexpr float roadWidth = 4.0f;
 constexpr float roadLength = 20.0f;
 
-constexpr float speed = 0.5f;
+constexpr float speed = 1.0f;
 
-constexpr float cameraPlayerOffset = 0.6f;
+constexpr float cameraPlayerOffset = 2.0f;
 constexpr float cameraAboveRoad = 20.0;
 
 GameState::GameState(std::unique_ptr<renderer> renderer) :

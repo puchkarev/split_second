@@ -10,14 +10,14 @@ Model Models::PlayerModel() {
     return {
             .vertices = {
                     // First triangle
-                    -0.2f, -0.3f, 0.0f,  // Bottom left
-                    0.2f, -0.3f, 0.0f,  // Bottom right
-                    0.2f, 0.3f, 0.0f,  // Top right
+                    -0.2f, -0.4f, 0.0f,  // Bottom left
+                    0.2f, -0.4f, 0.0f,  // Bottom right
+                    0.2f, 0.4f, 0.0f,  // Top right
 
                     // Second triangle
-                    0.2f,  0.3f, 0.0f,  // Top right
-                    -0.2f, 0.3f, 0.0f,  // Top left
-                    -0.2f, -0.3f, 0.0f   // Bottom left
+                    0.2f,  0.4f, 0.0f,  // Top right
+                    -0.2f, 0.4f, 0.0f,  // Top left
+                    -0.2f, -0.4f, 0.0f   // Bottom left
             },
             /*
             .normals = {
@@ -34,16 +34,15 @@ Model Models::PlayerModel() {
              */
             .texcoords = {
                     // First triangle
-                    0.0f, 1.0f,  // Bottom left (green)
-                    0.0f, 1.0f,  // Bottom right (green)
-                    0.0f, 1.0f,  // Top right (green)
+                    0.0f, 1.0f,  // Bottom left
+                    1.0f, 1.0f,  // Bottom right
+                    1.0f, 0.0f,  // Top right
 
-                    // Second triangle
-                    0.0f, 1.0f,  // Top right (green)
-                    0.0f, 1.0f,  // Top left (green)
-                    0.0f, 1.0f   // Bottom left (green)
+                    1.0f, 0.0f,  // Top right
+                    0.0f, 0.0f,   // Top left
+                    0.0f, 1.0f,  // Bottom left
             },
-            .texture = "block_blue.png",
+            .texture = "car_basic.jpg",
     };
 }
 
@@ -83,13 +82,13 @@ Model Models::BackgroundBlock(BlockType type) {
             },
              */
             .texcoords {
-                    0.0f, 2.0f,  // Bottom left
-                    1.0f, 2.0f,  // Bottom right
+                    0.0f, 1.0f,  // Bottom left
+                    1.0f, 1.0f,  // Bottom right
                     1.0f, 0.0f,  // Top right
 
                     1.0f, 0.0f,  // Top right
                     0.0f, 0.0f,   // Top left
-                    0.0f, 2.0f,  // Bottom left
+                    0.0f, 1.0f,  // Bottom left
             },
             .texture = type_to_texture(type),
     };
